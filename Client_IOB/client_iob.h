@@ -3,6 +3,14 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_client_iob.h"
+// Library for processing XML documents
+#include <QDomDocument>
+#include <QXMLStreamReader>
+// Library for file processing
+#include <QFile>
+#include <QFileInfo>
+// Library for message boxes
+#include <QMessageBox>
 
 class Client_IOB : public QMainWindow
 {
@@ -13,6 +21,13 @@ public:
 	~Client_IOB();
 
 private:
+	
+	QString mXMLFileName;
+	QDomDocument mStatusXML; // own status update
+
+	// private functions
+	QDomDocument Client_IOB::loadXMLDocument(QString);
+
 	Ui::Client_IOBClass ui;
 };
 
