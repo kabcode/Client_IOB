@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="client_iob.cpp" />
+    <ClCompile Include="Client_User.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_client_iob.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
@@ -199,6 +200,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Client_User.h" />
     <ClInclude Include="GeneratedFiles\ui_client_iob.h" />
   </ItemGroup>
   <ItemGroup>
