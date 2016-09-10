@@ -33,6 +33,8 @@ public:
 		ABSENT
 	};
 
+public slots:
+
 private:
 	// member variables
 	QString      mXMLFileName = "client.xml";
@@ -44,7 +46,6 @@ private:
 	// network variables
 	QTcpSocket      *mTCPSocket;
 	QNetworkSession *mNetworkSession;
-
 	
 	// private functions
 	QDomDocument loadXMLDocument(QString);

@@ -18,6 +18,7 @@ Client_IOB::Client_IOB(QWidget *parent)
 	setStatus(mStatusXML);
 
 	// contact server
+	connect(mTCPSocket, SIGNAL(readyRead()), this, SLOT(showMessage()));
 	contactServer(mTCPSocket);
 
 	ui.setupUi(this);
