@@ -50,9 +50,6 @@
     <ClCompile Include="GeneratedFiles\qrc_client_iob.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
-    <ClCompile Include="Client_User.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="client_iob.h">
@@ -68,9 +65,6 @@
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_client_iob.h">
       <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Client_User.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

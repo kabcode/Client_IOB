@@ -11,8 +11,7 @@
 #include <QFileInfo>
 // Library for message boxes
 #include <QMessageBox>
-// own includes
-#include "Client_User.h"
+#include <QInputDialog>
 
 //**************//
 // Client Class //
@@ -25,15 +24,25 @@ class Client_IOB : public QMainWindow
 public:
 	Client_IOB(QWidget *parent = 0);
 	~Client_IOB();
+	enum STATUS
+	{
+		AVAILABE,
+		BUSY,
+		ABSENT
+	};
 
 private:
-	
+	// member variables
 	QString mXMLFileName;
-	QDomDocument mStatusXML; // own status update
-	Client_User mUser;
+	QDomDocument mStatusXML;
+	int mID;
+	QString mName;
+	int mStatus;
 
+	
 	// private functions
-	QDomDocument Client_IOB::loadXMLDocument(QString);
+	QDomDocument loadXMLDocument(QString);
+	void setStatus(QDomDocument);
 
 	Ui::Client_IOBClass ui;
 };
