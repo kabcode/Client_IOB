@@ -1,5 +1,9 @@
 #pragma once
 
+#include <QString>
+#include <QDomDocument>
+#include <stdlib.h>
+
 //*******************//
 // CLIENT USER CLASS //
 //*******************//
@@ -11,6 +15,28 @@ class Client_User
 {
 public:
 	Client_User();
+	Client_User(QDomDocument);
 	~Client_User();
+	enum mStatus: unsigned int
+	{
+		AVAILABLE,
+		BUSY,
+		ABSENT
+	};
+
+	// functions
+	int getID() { return mID; };
+
+private:
+	//  member variables
+	int mID;
+	unsigned int mStatus;
+	QString mClientName;
+	QString mLocation;
+	int mPhone;
+	QString mNotes;
+
+	// member function
+	void setupUser(QDomDocument);
 };
 

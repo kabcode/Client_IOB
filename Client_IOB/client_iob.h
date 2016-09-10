@@ -11,6 +11,12 @@
 #include <QFileInfo>
 // Library for message boxes
 #include <QMessageBox>
+// own includes
+#include "Client_User.h"
+
+//**************//
+// Client Class //
+//************* //
 
 class Client_IOB : public QMainWindow
 {
@@ -24,6 +30,7 @@ private:
 	
 	QString mXMLFileName;
 	QDomDocument mStatusXML; // own status update
+	Client_User mUser;
 
 	// private functions
 	QDomDocument Client_IOB::loadXMLDocument(QString);
