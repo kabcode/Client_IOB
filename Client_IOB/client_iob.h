@@ -3,6 +3,8 @@
 
 #include <QtWidgets/QMainWindow>
 #include "ui_client_iob.h"
+// qt network library
+#include <QtNetwork>
 // Library for processing XML documents
 #include <QDomDocument>
 #include <QXMLStreamReader>
@@ -33,11 +35,14 @@ public:
 
 private:
 	// member variables
-	QString mXMLFileName;
+	QString mXMLFileName = "client.xml";
 	QDomDocument mStatusXML;
 	int mID;
 	QString mName;
 	int mStatus;
+	
+	// network variables
+	QTcpSocket *mTCPSocket;
 
 	
 	// private functions

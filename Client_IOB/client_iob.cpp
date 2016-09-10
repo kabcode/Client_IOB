@@ -1,9 +1,12 @@
 #include "client_iob.h"
 
+// debug library
+#include <QDebug>
 
 
 Client_IOB::Client_IOB(QWidget *parent)
-	: QMainWindow(parent)
+	: QMainWindow(parent),
+	mTCPSocket(new QTcpSocket(this))
 {
 	// start client
 
@@ -12,6 +15,8 @@ Client_IOB::Client_IOB(QWidget *parent)
 
 	// set status based on xml document
 	setStatus(mStatusXML);
+
+	// contact server
 
 	ui.setupUi(this);
 } // END constructor
@@ -41,7 +46,7 @@ QDomDocument Client_IOB::loadXMLDocument(QString fileName)
 			xmlWriter.writeStartElement("client");
 			xmlWriter.writeTextElement(QString("id"), "0");
 			xmlWriter.writeTextElement(QString("name"), "");
-			xmlWriter.writeTextElement(QString("status"), QString(Client_IOB::STATUS::ABSENT));
+			xmlWriter.writeTextElement(QString("status"), QString::number(Client_IOB::STATUS::ABSENT));
 			xmlWriter.writeEndElement();
 			xmlWriter.writeEndDocument();
 			file.close();
@@ -86,13 +91,14 @@ void Client_IOB::setStatus(QDomDocument doc)
 	QDomElement root = doc.firstChildElement("client");
 	QDomElement domID = root.firstChildElement("ID");
 	mID = domID.text().toInt();
+	qDebug() << mID;
 	QDomElement domStatus = root.firstChildElement("status");
 	mStatus = domStatus.text().toInt();
+	qDebug() << mStatus;
 	QDomElement domName = root.firstChildElement("name");
-	mName = domName.text();
-
+	
 	// if the name tag is empty ask for user name
-	if (mName.isEmpty())
+	if (domName.text().isEmpty())
 	{
 		bool ok;
 		QString text = QInputDialog::getText(this, tr("Please provide a user name."),
@@ -110,8 +116,9 @@ void Client_IOB::setStatus(QDomDocument doc)
 			messageBox.critical(0, "Error", "No name provided!");
 			messageBox.setFixedSize(500, 200);
 			QApplication::exit(EXIT_FAILURE);
-		}
-			
+		}	
 	}
+	else{ mName = domName.text();}
+	qDebug() << mName;
 	
 }// END setStatus
