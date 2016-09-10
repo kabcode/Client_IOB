@@ -6,7 +6,8 @@
 
 Client_IOB::Client_IOB(QWidget *parent)
 	: QMainWindow(parent),
-	mTCPSocket(new QTcpSocket(this))
+	mTCPSocket(new QTcpSocket(this)),
+	mNetworkSession(Q_NULLPTR)
 {
 	// start client
 
@@ -17,6 +18,7 @@ Client_IOB::Client_IOB(QWidget *parent)
 	setStatus(mStatusXML);
 
 	// contact server
+	contactServer(mTCPSocket);
 
 	ui.setupUi(this);
 } // END constructor
@@ -122,3 +124,17 @@ void Client_IOB::setStatus(QDomDocument doc)
 	qDebug() << mName;
 	
 }// END setStatus
+
+// contact the server to establish a connection
+void Client_IOB::contactServer(QTcpSocket* socket)
+{
+	QString temp;
+	socket->connectToHost(QHostAddress::LocalHost, 9000);
+
+	if (socket->waitForConnected(-1))
+		qDebug() << "connected";
+	else {
+		qDebug() << "cannot connect";
+		return;
+	}
+}// END contactServer

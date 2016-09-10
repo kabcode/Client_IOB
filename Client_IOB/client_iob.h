@@ -35,19 +35,21 @@ public:
 
 private:
 	// member variables
-	QString mXMLFileName = "client.xml";
+	QString      mXMLFileName = "client.xml";
 	QDomDocument mStatusXML;
-	int mID;
-	QString mName;
-	int mStatus;
+	int          mID;
+	QString      mName;
+	int          mStatus;
 	
 	// network variables
-	QTcpSocket *mTCPSocket;
+	QTcpSocket      *mTCPSocket;
+	QNetworkSession *mNetworkSession;
 
 	
 	// private functions
 	QDomDocument loadXMLDocument(QString);
-	void setStatus(QDomDocument);
+	void         setStatus(QDomDocument);
+	void         contactServer(QTcpSocket*);
 
 	Ui::Client_IOBClass ui;
 };
