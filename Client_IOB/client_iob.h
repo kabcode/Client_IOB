@@ -52,7 +52,15 @@ private:
 	void         setStatus(QDomDocument);
 	void         contactServer(QTcpSocket*);
 
+	// UI variables
 	Ui::Client_IOBClass ui;
+
+	QLineEdit *nameEdit = 0;
+	QLineEdit *IPEdit   = 0;
+	QLineEdit *statusEdit = 0;
+
+	// UI functions
+	void initializeUIComponents();
 };
 
 #endif // CLIENT_IOB_H

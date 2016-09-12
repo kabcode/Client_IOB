@@ -1,5 +1,4 @@
 #include "client_iob.h"
-
 // debug library
 #include <QDebug>
 
@@ -22,6 +21,7 @@ Client_IOB::Client_IOB(QWidget *parent)
 	this->contactServer(mTCPSocket);
 
 	ui.setupUi(this);
+	this->initializeUIComponents();
 
 } // END constructor
 
@@ -140,3 +140,25 @@ void Client_IOB::contactServer(QTcpSocket* socket)
 		return;
 	}
 }// END contactServer
+
+// setup the ui components
+void Client_IOB::initializeUIComponents()
+{
+	// setup editable lines
+	this->nameEdit = ui.nameEdit;
+    this->nameEdit->setText(mName);
+	this->IPEdit = ui.IPEdit;
+	// cycle through all IP adresses
+	foreach(const QHostAddress &address, QNetworkInterface::allAddresses())
+	{
+		if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
+		{
+			qDebug() << address.toString();
+			this->IPEdit->setText(address.toString());
+		}
+	}
+	this->statusEdit = ui.statuEdit;
+	this->statusEdit->setText(QString::number(mStatus));
+	
+
+} // END initializeUIComponents
