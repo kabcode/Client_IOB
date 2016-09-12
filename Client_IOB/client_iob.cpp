@@ -12,16 +12,17 @@ Client_IOB::Client_IOB(QWidget *parent)
 	// start client
 
 	// load xml document with last status
-	mStatusXML = loadXMLDocument(mXMLFileName);
+	mStatusXML = this->loadXMLDocument(mXMLFileName);
 
 	// set status based on xml document
-	setStatus(mStatusXML);
+	this->setStatus(mStatusXML);
 
 	// contact server
 	connect(mTCPSocket, SIGNAL(readyRead()), this, SLOT(showMessage()));
-	contactServer(mTCPSocket);
+	this->contactServer(mTCPSocket);
 
 	ui.setupUi(this);
+
 } // END constructor
 
 Client_IOB::~Client_IOB()
