@@ -25,10 +25,10 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="QLineEdit" name="nameEdit"/>
+      <widget class="QLineEdit" name="idEdit"/>
      </item>
      <item>
-      <widget class="QLineEdit" name="IPEdit"/>
+      <widget class="QLineEdit" name="nameEdit"/>
      </item>
      <item>
       <widget class="QLineEdit" name="statuEdit"/>
@@ -53,16 +53,16 @@
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout_2">
      <item>
-      <widget class="QLabel" name="nameLabel">
+      <widget class="QLabel" name="idLabel">
        <property name="text">
-        <string>Name</string>
+        <string>ID</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QLabel" name="IPLabel">
+      <widget class="QLabel" name="nameLabel">
        <property name="text">
-        <string>IP</string>
+        <string>Name</string>
        </property>
       </widget>
      </item>

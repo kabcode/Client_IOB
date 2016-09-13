@@ -34,6 +34,7 @@ public:
 	};
 
 public slots:
+	void updateMember();
 
 private:
 	// member variables
@@ -49,15 +50,19 @@ private:
 	
 	// private functions
 	QDomDocument loadXMLDocument(QString);
+	void		 writeXMLDocument();
 	void         setStatus(QDomDocument);
 	void         contactServer(QTcpSocket*);
+
 
 	// UI variables
 	Ui::Client_IOBClass ui;
 
-	QLineEdit *nameEdit = 0;
-	QLineEdit *IPEdit   = 0;
+	QLineEdit *idEdit = 0;
+	QLineEdit *nameEdit   = 0;
 	QLineEdit *statusEdit = 0;
+
+	QPushButton *updateButton = 0;
 
 	// UI functions
 	void initializeUIComponents();

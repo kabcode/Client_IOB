@@ -33,14 +33,14 @@ public:
     QWidget *centralWidget;
     QWidget *horizontalLayoutWidget;
     QHBoxLayout *horizontalLayout;
+    QLineEdit *idEdit;
     QLineEdit *nameEdit;
-    QLineEdit *IPEdit;
     QLineEdit *statuEdit;
     QPushButton *updateButton;
     QWidget *horizontalLayoutWidget_2;
     QHBoxLayout *horizontalLayout_2;
+    QLabel *idLabel;
     QLabel *nameLabel;
-    QLabel *IPLabel;
     QLabel *statusLabel;
     QMenuBar *menuBar;
     QMenu *menuClient_InOutBoard;
@@ -62,15 +62,15 @@ public:
         horizontalLayout->setContentsMargins(11, 11, 11, 11);
         horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
         horizontalLayout->setContentsMargins(0, 0, 0, 0);
+        idEdit = new QLineEdit(horizontalLayoutWidget);
+        idEdit->setObjectName(QStringLiteral("idEdit"));
+
+        horizontalLayout->addWidget(idEdit);
+
         nameEdit = new QLineEdit(horizontalLayoutWidget);
         nameEdit->setObjectName(QStringLiteral("nameEdit"));
 
         horizontalLayout->addWidget(nameEdit);
-
-        IPEdit = new QLineEdit(horizontalLayoutWidget);
-        IPEdit->setObjectName(QStringLiteral("IPEdit"));
-
-        horizontalLayout->addWidget(IPEdit);
 
         statuEdit = new QLineEdit(horizontalLayoutWidget);
         statuEdit->setObjectName(QStringLiteral("statuEdit"));
@@ -90,15 +90,15 @@ public:
         horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
         horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
         horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
+        idLabel = new QLabel(horizontalLayoutWidget_2);
+        idLabel->setObjectName(QStringLiteral("idLabel"));
+
+        horizontalLayout_2->addWidget(idLabel);
+
         nameLabel = new QLabel(horizontalLayoutWidget_2);
         nameLabel->setObjectName(QStringLiteral("nameLabel"));
 
         horizontalLayout_2->addWidget(nameLabel);
-
-        IPLabel = new QLabel(horizontalLayoutWidget_2);
-        IPLabel->setObjectName(QStringLiteral("IPLabel"));
-
-        horizontalLayout_2->addWidget(IPLabel);
 
         statusLabel = new QLabel(horizontalLayoutWidget_2);
         statusLabel->setObjectName(QStringLiteral("statusLabel"));
@@ -130,8 +130,8 @@ public:
     {
         Client_IOBClass->setWindowTitle(QApplication::translate("Client_IOBClass", "Client - InOutBoard", 0));
         updateButton->setText(QApplication::translate("Client_IOBClass", "Update", 0));
+        idLabel->setText(QApplication::translate("Client_IOBClass", "ID", 0));
         nameLabel->setText(QApplication::translate("Client_IOBClass", "Name", 0));
-        IPLabel->setText(QApplication::translate("Client_IOBClass", "IP", 0));
         statusLabel->setText(QApplication::translate("Client_IOBClass", "Status", 0));
         menuClient_InOutBoard->setTitle(QApplication::translate("Client_IOBClass", "Men\303\274", 0));
     } // retranslateUi

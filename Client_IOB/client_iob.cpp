@@ -27,7 +27,7 @@ Client_IOB::Client_IOB(QWidget *parent)
 
 Client_IOB::~Client_IOB()
 {
-	
+	writeXMLDocument();
 } // END destructor
 
   // load the XML document
@@ -88,6 +88,32 @@ QDomDocument Client_IOB::loadXMLDocument(QString fileName)
 	return clientXML;
 } // END loadXMLDocument
 
+// write the user data into a xml document
+void Client_IOB::writeXMLDocument()
+{
+	// open xml file
+	QFile file(mXMLFileName);
+	if (!file.open(QFile::WriteOnly))
+	{
+		// error message
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "Unable to write XML file!!");
+		messageBox.setFixedSize(500, 200);
+		return;
+	}
+
+	// write all the status information in the xml document
+	QXmlStreamWriter writer(&file);
+	writer.setAutoFormatting(true);
+	writer.writeStartElement("client");
+	writer.writeTextElement("ID", QString::number(mID));
+	writer.writeTextElement("name", mName);
+	writer.writeTextElement("status", QString::number(mStatus));
+	writer.writeEndElement();
+
+	qDebug() << "Wrote XML file:" << mXMLFileName;
+}// END writeXMLDocument
+
 // fill the member variables with the content of the xml document
 void Client_IOB::setStatus(QDomDocument doc)
 {
@@ -141,24 +167,24 @@ void Client_IOB::contactServer(QTcpSocket* socket)
 	}
 }// END contactServer
 
-// setup the ui components
+ // setup the ui components
 void Client_IOB::initializeUIComponents()
 {
 	// setup editable lines
+	this->idEdit = ui.idEdit;
+	this->idEdit->setText(QString::number(mID));
 	this->nameEdit = ui.nameEdit;
-    this->nameEdit->setText(mName);
-	this->IPEdit = ui.IPEdit;
-	// cycle through all IP adresses
-	foreach(const QHostAddress &address, QNetworkInterface::allAddresses())
-	{
-		if (address.protocol() == QAbstractSocket::IPv4Protocol && address != QHostAddress(QHostAddress::LocalHost))
-		{
-			qDebug() << address.toString();
-			this->IPEdit->setText(address.toString());
-		}
-	}
+	this->idEdit->setText(mName);
 	this->statusEdit = ui.statuEdit;
 	this->statusEdit->setText(QString::number(mStatus));
-	
 
-} // END initializeUIComponents
+	// connect update button and update function
+	connect(ui.updateButton, SIGNAL(ui.updateButton->clicked()), this, SLOT(this->updateMember()));
+
+}// END initializeUIComponents
+
+void Client_IOB::updateMember()
+{
+	qDebug() << "Starting update member variables";
+}
+
