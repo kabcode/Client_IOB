@@ -33,7 +33,7 @@ public:
 		ABSENT
 	};
 
-public slots:
+private slots:
 	void updateMember();
 
 private:

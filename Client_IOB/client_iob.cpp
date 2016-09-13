@@ -174,17 +174,19 @@ void Client_IOB::initializeUIComponents()
 	this->idEdit = ui.idEdit;
 	this->idEdit->setText(QString::number(mID));
 	this->nameEdit = ui.nameEdit;
-	this->idEdit->setText(mName);
+	this->nameEdit->setText(mName);
 	this->statusEdit = ui.statuEdit;
 	this->statusEdit->setText(QString::number(mStatus));
 
 	// connect update button and update function
-	connect(ui.updateButton, SIGNAL(ui.updateButton->clicked()), this, SLOT(this->updateMember()));
+	this->updateButton = ui.updateButton;
+	connect(this->updateButton, SIGNAL(clicked()), this, SLOT(updateMember()));
 
 }// END initializeUIComponents
 
+// update the member variables if update button is clicked
 void Client_IOB::updateMember()
 {
 	qDebug() << "Starting update member variables";
-}
+} // END updateMember
 
