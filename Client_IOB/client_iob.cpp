@@ -182,7 +182,8 @@ void Client_IOB::contactServer(QTcpSocket* socket)
 void Client_IOB::initializeUIComponents()
 {
 	// set title
-	this->setWindowTitle(mName.append(" - InOutBoard"));
+	QString mainWinwdowTitle = QString("%1 - InOutBoard").arg(mName);
+	this->setWindowTitle(mainWinwdowTitle);
 	this->setWindowIcon(QIcon("Resources/kicker.ico"));
 
 	// setup editable lines
