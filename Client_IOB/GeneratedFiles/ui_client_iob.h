@@ -13,16 +13,18 @@
 #include <QtWidgets/QAction>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
+#include <QtWidgets/QGridLayout>
 #include <QtWidgets/QHBoxLayout>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
-#include <QtWidgets/QMenu>
-#include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QTableView>
 #include <QtWidgets/QToolBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -31,19 +33,24 @@ class Ui_Client_IOBClass
 {
 public:
     QWidget *centralWidget;
-    QWidget *horizontalLayoutWidget;
-    QHBoxLayout *horizontalLayout;
-    QLineEdit *idEdit;
-    QLineEdit *nameEdit;
-    QLineEdit *statuEdit;
-    QPushButton *updateButton;
-    QWidget *horizontalLayoutWidget_2;
-    QHBoxLayout *horizontalLayout_2;
-    QLabel *idLabel;
-    QLabel *nameLabel;
-    QLabel *statusLabel;
-    QMenuBar *menuBar;
-    QMenu *menuClient_InOutBoard;
+    QWidget *horizontalLayoutWidget_3;
+    QHBoxLayout *horizontalLayout_3;
+    QVBoxLayout *verticalLayout;
+    QPushButton *buttonAbsent;
+    QSpacerItem *verticalSpacer;
+    QPushButton *buttonBusy;
+    QSpacerItem *verticalSpacer_2;
+    QPushButton *buttonAvailable;
+    QTableView *tableView;
+    QWidget *gridLayoutWidget;
+    QGridLayout *gridLayout;
+    QLineEdit *lineEditPhone;
+    QPushButton *pushButtonUpdate;
+    QLineEdit *lineEditLocation;
+    QLabel *labelNotes;
+    QLabel *labelLocation;
+    QLineEdit *lineEditNotes;
+    QLabel *labelPhone;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -51,75 +58,133 @@ public:
     {
         if (Client_IOBClass->objectName().isEmpty())
             Client_IOBClass->setObjectName(QStringLiteral("Client_IOBClass"));
-        Client_IOBClass->resize(600, 400);
+        Client_IOBClass->resize(639, 406);
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(Client_IOBClass->sizePolicy().hasHeightForWidth());
+        Client_IOBClass->setSizePolicy(sizePolicy);
         centralWidget = new QWidget(Client_IOBClass);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        horizontalLayoutWidget = new QWidget(centralWidget);
-        horizontalLayoutWidget->setObjectName(QStringLiteral("horizontalLayoutWidget"));
-        horizontalLayoutWidget->setGeometry(QRect(30, 89, 521, 31));
-        horizontalLayout = new QHBoxLayout(horizontalLayoutWidget);
-        horizontalLayout->setSpacing(6);
-        horizontalLayout->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout->setObjectName(QStringLiteral("horizontalLayout"));
-        horizontalLayout->setContentsMargins(0, 0, 0, 0);
-        idEdit = new QLineEdit(horizontalLayoutWidget);
-        idEdit->setObjectName(QStringLiteral("idEdit"));
+        horizontalLayoutWidget_3 = new QWidget(centralWidget);
+        horizontalLayoutWidget_3->setObjectName(QStringLiteral("horizontalLayoutWidget_3"));
+        horizontalLayoutWidget_3->setGeometry(QRect(20, 0, 601, 311));
+        horizontalLayout_3 = new QHBoxLayout(horizontalLayoutWidget_3);
+        horizontalLayout_3->setSpacing(6);
+        horizontalLayout_3->setContentsMargins(11, 11, 11, 11);
+        horizontalLayout_3->setObjectName(QStringLiteral("horizontalLayout_3"));
+        horizontalLayout_3->setContentsMargins(0, 0, 0, 0);
+        verticalLayout = new QVBoxLayout();
+        verticalLayout->setSpacing(6);
+        verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        buttonAbsent = new QPushButton(horizontalLayoutWidget_3);
+        buttonAbsent->setObjectName(QStringLiteral("buttonAbsent"));
+        sizePolicy.setHeightForWidth(buttonAbsent->sizePolicy().hasHeightForWidth());
+        buttonAbsent->setSizePolicy(sizePolicy);
+        buttonAbsent->setMinimumSize(QSize(75, 75));
+        buttonAbsent->setMaximumSize(QSize(16777215, 16777215));
+        buttonAbsent->setBaseSize(QSize(0, 0));
 
-        horizontalLayout->addWidget(idEdit);
+        verticalLayout->addWidget(buttonAbsent);
 
-        nameEdit = new QLineEdit(horizontalLayoutWidget);
-        nameEdit->setObjectName(QStringLiteral("nameEdit"));
+        verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        horizontalLayout->addWidget(nameEdit);
+        verticalLayout->addItem(verticalSpacer);
 
-        statuEdit = new QLineEdit(horizontalLayoutWidget);
-        statuEdit->setObjectName(QStringLiteral("statuEdit"));
+        buttonBusy = new QPushButton(horizontalLayoutWidget_3);
+        buttonBusy->setObjectName(QStringLiteral("buttonBusy"));
+        sizePolicy.setHeightForWidth(buttonBusy->sizePolicy().hasHeightForWidth());
+        buttonBusy->setSizePolicy(sizePolicy);
+        buttonBusy->setMinimumSize(QSize(75, 75));
 
-        horizontalLayout->addWidget(statuEdit);
+        verticalLayout->addWidget(buttonBusy);
 
-        updateButton = new QPushButton(horizontalLayoutWidget);
-        updateButton->setObjectName(QStringLiteral("updateButton"));
+        verticalSpacer_2 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
-        horizontalLayout->addWidget(updateButton);
+        verticalLayout->addItem(verticalSpacer_2);
 
-        horizontalLayoutWidget_2 = new QWidget(centralWidget);
-        horizontalLayoutWidget_2->setObjectName(QStringLiteral("horizontalLayoutWidget_2"));
-        horizontalLayoutWidget_2->setGeometry(QRect(30, 70, 441, 21));
-        horizontalLayout_2 = new QHBoxLayout(horizontalLayoutWidget_2);
-        horizontalLayout_2->setSpacing(6);
-        horizontalLayout_2->setContentsMargins(11, 11, 11, 11);
-        horizontalLayout_2->setObjectName(QStringLiteral("horizontalLayout_2"));
-        horizontalLayout_2->setContentsMargins(0, 0, 0, 0);
-        idLabel = new QLabel(horizontalLayoutWidget_2);
-        idLabel->setObjectName(QStringLiteral("idLabel"));
+        buttonAvailable = new QPushButton(horizontalLayoutWidget_3);
+        buttonAvailable->setObjectName(QStringLiteral("buttonAvailable"));
+        sizePolicy.setHeightForWidth(buttonAvailable->sizePolicy().hasHeightForWidth());
+        buttonAvailable->setSizePolicy(sizePolicy);
+        buttonAvailable->setMinimumSize(QSize(75, 75));
 
-        horizontalLayout_2->addWidget(idLabel);
+        verticalLayout->addWidget(buttonAvailable);
 
-        nameLabel = new QLabel(horizontalLayoutWidget_2);
-        nameLabel->setObjectName(QStringLiteral("nameLabel"));
 
-        horizontalLayout_2->addWidget(nameLabel);
+        horizontalLayout_3->addLayout(verticalLayout);
 
-        statusLabel = new QLabel(horizontalLayoutWidget_2);
-        statusLabel->setObjectName(QStringLiteral("statusLabel"));
+        tableView = new QTableView(horizontalLayoutWidget_3);
+        tableView->setObjectName(QStringLiteral("tableView"));
 
-        horizontalLayout_2->addWidget(statusLabel);
+        horizontalLayout_3->addWidget(tableView);
+
+        gridLayoutWidget = new QWidget(centralWidget);
+        gridLayoutWidget->setObjectName(QStringLiteral("gridLayoutWidget"));
+        gridLayoutWidget->setGeometry(QRect(20, 320, 601, 51));
+        gridLayout = new QGridLayout(gridLayoutWidget);
+        gridLayout->setSpacing(2);
+        gridLayout->setContentsMargins(11, 11, 11, 11);
+        gridLayout->setObjectName(QStringLiteral("gridLayout"));
+        gridLayout->setContentsMargins(0, 0, 0, 0);
+        lineEditPhone = new QLineEdit(gridLayoutWidget);
+        lineEditPhone->setObjectName(QStringLiteral("lineEditPhone"));
+
+        gridLayout->addWidget(lineEditPhone, 2, 2, 1, 1);
+
+        pushButtonUpdate = new QPushButton(gridLayoutWidget);
+        pushButtonUpdate->setObjectName(QStringLiteral("pushButtonUpdate"));
+
+        gridLayout->addWidget(pushButtonUpdate, 2, 3, 1, 1);
+
+        lineEditLocation = new QLineEdit(gridLayoutWidget);
+        lineEditLocation->setObjectName(QStringLiteral("lineEditLocation"));
+        QSizePolicy sizePolicy1(QSizePolicy::Expanding, QSizePolicy::Fixed);
+        sizePolicy1.setHorizontalStretch(1);
+        sizePolicy1.setVerticalStretch(0);
+        sizePolicy1.setHeightForWidth(lineEditLocation->sizePolicy().hasHeightForWidth());
+        lineEditLocation->setSizePolicy(sizePolicy1);
+
+        gridLayout->addWidget(lineEditLocation, 2, 0, 1, 1);
+
+        labelNotes = new QLabel(gridLayoutWidget);
+        labelNotes->setObjectName(QStringLiteral("labelNotes"));
+        QSizePolicy sizePolicy2(QSizePolicy::Preferred, QSizePolicy::Preferred);
+        sizePolicy2.setHorizontalStretch(2);
+        sizePolicy2.setVerticalStretch(0);
+        sizePolicy2.setHeightForWidth(labelNotes->sizePolicy().hasHeightForWidth());
+        labelNotes->setSizePolicy(sizePolicy2);
+
+        gridLayout->addWidget(labelNotes, 0, 2, 1, 1);
+
+        labelLocation = new QLabel(gridLayoutWidget);
+        labelLocation->setObjectName(QStringLiteral("labelLocation"));
+        sizePolicy.setHeightForWidth(labelLocation->sizePolicy().hasHeightForWidth());
+        labelLocation->setSizePolicy(sizePolicy);
+
+        gridLayout->addWidget(labelLocation, 0, 0, 1, 1);
+
+        lineEditNotes = new QLineEdit(gridLayoutWidget);
+        lineEditNotes->setObjectName(QStringLiteral("lineEditNotes"));
+        sizePolicy1.setHeightForWidth(lineEditNotes->sizePolicy().hasHeightForWidth());
+        lineEditNotes->setSizePolicy(sizePolicy1);
+
+        gridLayout->addWidget(lineEditNotes, 2, 1, 1, 1);
+
+        labelPhone = new QLabel(gridLayoutWidget);
+        labelPhone->setObjectName(QStringLiteral("labelPhone"));
+
+        gridLayout->addWidget(labelPhone, 0, 1, 1, 1);
 
         Client_IOBClass->setCentralWidget(centralWidget);
-        menuBar = new QMenuBar(Client_IOBClass);
-        menuBar->setObjectName(QStringLiteral("menuBar"));
-        menuBar->setGeometry(QRect(0, 0, 600, 21));
-        menuClient_InOutBoard = new QMenu(menuBar);
-        menuClient_InOutBoard->setObjectName(QStringLiteral("menuClient_InOutBoard"));
-        Client_IOBClass->setMenuBar(menuBar);
+        horizontalLayoutWidget_3->raise();
+        gridLayoutWidget->raise();
         mainToolBar = new QToolBar(Client_IOBClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
         Client_IOBClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
         statusBar = new QStatusBar(Client_IOBClass);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         Client_IOBClass->setStatusBar(statusBar);
-
-        menuBar->addAction(menuClient_InOutBoard->menuAction());
 
         retranslateUi(Client_IOBClass);
 
@@ -129,11 +194,13 @@ public:
     void retranslateUi(QMainWindow *Client_IOBClass)
     {
         Client_IOBClass->setWindowTitle(QApplication::translate("Client_IOBClass", "Client - InOutBoard", 0));
-        updateButton->setText(QApplication::translate("Client_IOBClass", "Update", 0));
-        idLabel->setText(QApplication::translate("Client_IOBClass", "ID", 0));
-        nameLabel->setText(QApplication::translate("Client_IOBClass", "Name", 0));
-        statusLabel->setText(QApplication::translate("Client_IOBClass", "Status", 0));
-        menuClient_InOutBoard->setTitle(QApplication::translate("Client_IOBClass", "Men\303\274", 0));
+        buttonAbsent->setText(QApplication::translate("Client_IOBClass", "PushButton", 0));
+        buttonBusy->setText(QApplication::translate("Client_IOBClass", "PushButton", 0));
+        buttonAvailable->setText(QApplication::translate("Client_IOBClass", "PushButton", 0));
+        pushButtonUpdate->setText(QApplication::translate("Client_IOBClass", "Update", 0));
+        labelNotes->setText(QApplication::translate("Client_IOBClass", "Notes", 0));
+        labelLocation->setText(QApplication::translate("Client_IOBClass", "Location", 0));
+        labelPhone->setText(QApplication::translate("Client_IOBClass", "Phone", 0));
     } // retranslateUi
 
 };

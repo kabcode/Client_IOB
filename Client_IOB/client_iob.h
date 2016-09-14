@@ -35,6 +35,7 @@ public:
 
 private slots:
 	void updateMember();
+	void updateStatus(int);
 
 private:
 	// member variables
@@ -43,6 +44,9 @@ private:
 	int          mID;
 	QString      mName;
 	int          mStatus;
+	QString      mLocation;
+	QString      mPhone;
+	QString      mNotes;
 	
 	// network variables
 	QTcpSocket      *mTCPSocket;
@@ -58,11 +62,15 @@ private:
 	// UI variables
 	Ui::Client_IOBClass ui;
 
-	QLineEdit *idEdit = 0;
-	QLineEdit *nameEdit   = 0;
-	QLineEdit *statusEdit = 0;
-
+	QLineEdit *locationEdit   = 0;
+	QLineEdit *phoneEdit      = 0;
+	QLineEdit *notesEdit      = 0;
 	QPushButton *updateButton = 0;
+
+	QPushButton *buttonRed     = 0;
+	QPushButton *buttonYellow  = 0;
+	QPushButton *buttonGreen   = 0;
+	QSignalMapper *signalMapper = 0;
 
 	// UI functions
 	void initializeUIComponents();

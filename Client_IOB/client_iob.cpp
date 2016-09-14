@@ -12,14 +12,15 @@ Client_IOB::Client_IOB(QWidget *parent)
 
 	// load xml document with last status
 	mStatusXML = this->loadXMLDocument(mXMLFileName);
-
+	
 	// set status based on xml document
 	this->setStatus(mStatusXML);
-
+	
 	// contact server
 	connect(mTCPSocket, SIGNAL(readyRead()), this, SLOT(showMessage()));
 	this->contactServer(mTCPSocket);
 
+	// set UI
 	ui.setupUi(this);
 	this->initializeUIComponents();
 
@@ -28,6 +29,7 @@ Client_IOB::Client_IOB(QWidget *parent)
 Client_IOB::~Client_IOB()
 {
 	writeXMLDocument();
+	delete signalMapper;
 } // END destructor
 
   // load the XML document
@@ -106,9 +108,12 @@ void Client_IOB::writeXMLDocument()
 	QXmlStreamWriter writer(&file);
 	writer.setAutoFormatting(true);
 	writer.writeStartElement("client");
-	writer.writeTextElement("ID", QString::number(mID));
-	writer.writeTextElement("name", mName);
-	writer.writeTextElement("status", QString::number(mStatus));
+	writer.writeTextElement("id",       QString::number(mID));
+	writer.writeTextElement("name",     mName);
+	writer.writeTextElement("status",   QString::number(mStatus));
+	writer.writeTextElement("location", mLocation);
+	writer.writeTextElement("phone",    mPhone);
+	writer.writeTextElement("notes",    mNotes);
 	writer.writeEndElement();
 
 	qDebug() << "Wrote XML file:" << mXMLFileName;
@@ -119,14 +124,15 @@ void Client_IOB::setStatus(QDomDocument doc)
 {
 	// get the value of the document nodes
 	QDomElement root = doc.firstChildElement("client");
-	QDomElement domID = root.firstChildElement("ID");
+	QDomElement domID = root.firstChildElement("id");
 	mID = domID.text().toInt();
 	qDebug() << mID;
+	// load the app with STATUS::AVAILABLE
 	QDomElement domStatus = root.firstChildElement("status");
-	mStatus = domStatus.text().toInt();
+	/* mStatus = domStatus.text().toInt(); */
+	mStatus = STATUS::AVAILABE;
 	qDebug() << mStatus;
 	QDomElement domName = root.firstChildElement("name");
-	
 	// if the name tag is empty ask for user name
 	if (domName.text().isEmpty())
 	{
@@ -150,7 +156,12 @@ void Client_IOB::setStatus(QDomDocument doc)
 	}
 	else{ mName = domName.text();}
 	qDebug() << mName;
-	
+	QDomElement domLocation = root.firstChildElement("location");
+	mLocation = domLocation.text();
+	QDomElement domPhone = root.firstChildElement("phone");
+	mPhone = domPhone.text();
+	QDomElement domNotes = root.firstChildElement("notes");
+	mNotes = domNotes.text();	
 }// END setStatus
 
 // contact the server to establish a connection
@@ -171,16 +182,30 @@ void Client_IOB::contactServer(QTcpSocket* socket)
 void Client_IOB::initializeUIComponents()
 {
 	// setup editable lines
-	this->idEdit = ui.idEdit;
-	this->idEdit->setText(QString::number(mID));
-	this->nameEdit = ui.nameEdit;
-	this->nameEdit->setText(mName);
-	this->statusEdit = ui.statuEdit;
-	this->statusEdit->setText(QString::number(mStatus));
+	this->locationEdit = ui.lineEditLocation;
+	this->locationEdit->setText(mLocation);
+	this->phoneEdit = ui.lineEditPhone;
+	this->phoneEdit->setText(mPhone);
+	this->notesEdit = ui.lineEditNotes;
+	this->notesEdit->setText(mNotes);
 
 	// connect update button and update function
-	this->updateButton = ui.updateButton;
+	this->updateButton = ui.pushButtonUpdate;
 	connect(this->updateButton, SIGNAL(clicked()), this, SLOT(updateMember()));
+
+	// push buttons for status update
+	buttonRed    = ui.buttonAbsent;
+	buttonYellow = ui.buttonBusy;
+	buttonGreen  = ui.buttonAvailable;
+	signalMapper = new QSignalMapper(this);
+	signalMapper->setMapping(buttonRed,    STATUS::ABSENT);
+	signalMapper->setMapping(buttonYellow, STATUS::BUSY);
+	signalMapper->setMapping(buttonGreen,  STATUS::AVAILABE);
+	connect(buttonRed,    SIGNAL(clicked()), signalMapper, SLOT(map()));
+	connect(buttonYellow, SIGNAL(clicked()), signalMapper, SLOT(map()));
+	connect(buttonGreen,  SIGNAL(clicked()), signalMapper, SLOT(map()));
+	connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(updateStatus(int)));
+	updateStatus(mStatus);
 
 }// END initializeUIComponents
 
@@ -188,5 +213,31 @@ void Client_IOB::initializeUIComponents()
 void Client_IOB::updateMember()
 {
 	qDebug() << "Starting update member variables";
+	mLocation = locationEdit->text();
+	mPhone = phoneEdit->text();
+	mNotes = notesEdit->text();
 } // END updateMember
 
+// update the status semafore
+void Client_IOB::updateStatus(int newStatus)
+{
+	mStatus = newStatus;
+	qDebug() << "New Status: " << mStatus;
+	// set the semafore
+	buttonRed->setText("FALSE");
+	buttonYellow->setText("FALSE");
+	buttonGreen->setText("FALSE");
+	switch(mStatus)
+	{
+	case STATUS::ABSENT:
+		buttonRed->setText("TRUE");
+		break;
+	case STATUS::BUSY:
+		buttonYellow->setText("TRUE");
+		break;
+	case STATUS::AVAILABE:
+		buttonGreen->setText("TRUE");
+	}
+	
+	
+}// END updateStatus
