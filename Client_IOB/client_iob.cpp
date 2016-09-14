@@ -181,6 +181,10 @@ void Client_IOB::contactServer(QTcpSocket* socket)
  // setup the ui components
 void Client_IOB::initializeUIComponents()
 {
+	// set title
+	this->setWindowTitle(mName.append(" - InOutBoard"));
+	this->setWindowIcon(QIcon("Resources/kicker.ico"));
+
 	// setup editable lines
 	this->locationEdit = ui.lineEditLocation;
 	this->locationEdit->setText(mLocation);
