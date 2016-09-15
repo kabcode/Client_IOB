@@ -212,6 +212,21 @@ void Client_IOB::initializeUIComponents()
 	connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(updateStatus(int)));
 	updateStatus(mStatus);
 
+	// set tray icon settings
+	trayIconMenu = new QMenu(this);
+	createMenuTrayActions();
+	trayIconMenu->addAction(minimizeAction);
+	trayIconMenu->addAction(restoreAction);
+	trayIconMenu->addSeparator();
+	trayIconMenu->addAction(quitAction);
+	trayIcon = new QSystemTrayIcon(this);
+	QIcon icon = QIcon("Resources/kicker.ico");
+	trayIcon->setIcon(icon);
+	trayIcon->setContextMenu(trayIconMenu);
+	trayIcon->show();
+	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+
+
 }// END initializeUIComponents
 
 // update the member variables if update button is clicked
@@ -246,3 +261,17 @@ void Client_IOB::updateStatus(int newStatus)
 	
 	
 }// END updateStatus
+
+// create action for the tray icon menu
+void Client_IOB::createMenuTrayActions()
+{
+	minimizeAction = new QAction(tr("&Minimize"), this);
+	connect(minimizeAction, SIGNAL(triggered()), this, SLOT(hide()));
+
+	restoreAction = new QAction(tr("&Restore"), this);
+	connect(restoreAction, SIGNAL(triggered()), this, SLOT(showNormal()));
+
+	quitAction = new QAction(tr("&Quit"), this);
+	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
+
+}// END createMenuTrayActions

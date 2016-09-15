@@ -14,6 +14,9 @@
 // Library for message boxes
 #include <QMessageBox>
 #include <QInputDialog>
+// library for menu icon
+#include <QSystemTrayIcon>
+#include <QMenu>
 
 //**************//
 // Client Class //
@@ -67,13 +70,20 @@ private:
 	QLineEdit *notesEdit      = 0;
 	QPushButton *updateButton = 0;
 
-	QPushButton *buttonRed     = 0;
-	QPushButton *buttonYellow  = 0;
-	QPushButton *buttonGreen   = 0;
+	QPushButton *buttonRed      = 0;
+	QPushButton *buttonYellow   = 0;
+	QPushButton *buttonGreen    = 0;
 	QSignalMapper *signalMapper = 0;
+
+	QSystemTrayIcon *trayIcon = 0;
+	QMenu *trayIconMenu       = 0;
+	QAction *minimizeAction;
+	QAction *restoreAction;
+	QAction *quitAction;
 
 	// UI functions
 	void initializeUIComponents();
+	void createMenuTrayActions();
 };
 
 #endif // CLIENT_IOB_H
