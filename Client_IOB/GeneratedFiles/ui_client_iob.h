@@ -36,11 +36,13 @@ public:
     QWidget *horizontalLayoutWidget_3;
     QHBoxLayout *horizontalLayout_3;
     QVBoxLayout *verticalLayout;
+    QSpacerItem *verticalSpacer_3;
     QPushButton *buttonAbsent;
     QSpacerItem *verticalSpacer;
     QPushButton *buttonBusy;
     QSpacerItem *verticalSpacer_2;
     QPushButton *buttonAvailable;
+    QSpacerItem *verticalSpacer_4;
     QTableView *tableView;
     QWidget *gridLayoutWidget;
     QGridLayout *gridLayout;
@@ -77,6 +79,10 @@ public:
         verticalLayout = new QVBoxLayout();
         verticalLayout->setSpacing(6);
         verticalLayout->setObjectName(QStringLiteral("verticalLayout"));
+        verticalSpacer_3 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout->addItem(verticalSpacer_3);
+
         buttonAbsent = new QPushButton(horizontalLayoutWidget_3);
         buttonAbsent->setObjectName(QStringLiteral("buttonAbsent"));
         sizePolicy.setHeightForWidth(buttonAbsent->sizePolicy().hasHeightForWidth());
@@ -122,6 +128,10 @@ public:
         buttonAvailable->setIconSize(QSize(75, 75));
 
         verticalLayout->addWidget(buttonAvailable);
+
+        verticalSpacer_4 = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+
+        verticalLayout->addItem(verticalSpacer_4);
 
 
         horizontalLayout_3->addLayout(verticalLayout);

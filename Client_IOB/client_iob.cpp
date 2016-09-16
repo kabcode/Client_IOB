@@ -1,3 +1,5 @@
+
+
 #include "client_iob.h"
 // debug library
 #include <QDebug>
@@ -17,8 +19,8 @@ Client_IOB::Client_IOB(QWidget *parent)
 	this->setStatus(mStatusXML);
 	
 	// contact server
-	connect(mTCPSocket, SIGNAL(readyRead()), this, SLOT(showMessage()));
-	this->contactServer(mTCPSocket);
+	//connect(mTCPSocket, SIGNAL(readyRead()), this, SLOT(showMessage()));
+	//this->contactServer(mTCPSocket);
 
 	// set UI
 	ui.setupUi(this);
@@ -30,6 +32,7 @@ Client_IOB::~Client_IOB()
 {
 	writeXMLDocument();
 	delete signalMapper;
+	delete mTCPSocket;
 } // END destructor
 
   // load the XML document
@@ -184,6 +187,8 @@ void Client_IOB::initializeUIComponents()
 	QString mainWinwdowTitle = QString("%1 - InOutBoard").arg(mName);
 	this->setWindowTitle(mainWinwdowTitle);
 	this->setWindowIcon(QIcon("Resources/kicker.ico"));
+	this->setWindowFlags(Qt::Window | Qt::WindowMinimizeButtonHint | Qt::WindowCloseButtonHint);
+	this->setFixedSize(639, 406);
 
 	// setup editable lines
 	this->locationEdit = ui.lineEditLocation;
@@ -223,7 +228,7 @@ void Client_IOB::initializeUIComponents()
 	trayIcon->setIcon(icon);
 	trayIcon->setContextMenu(trayIconMenu);
 	trayIcon->show();
-	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
+	//connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
 }// END initializeUIComponents
 
@@ -240,28 +245,30 @@ void Client_IOB::updateMember()
 void Client_IOB::updateStatus(int newStatus)
 {
 	mStatus = newStatus;
-	qDebug() << "New Status: " << mStatus;
+	//qDebug() << "New Status: " << mStatus;
 	// set the semafore
-	QIcon lightOff("Resources/black.png");
-	QIcon lightRed("Resources/red.png");
-	QIcon lightYellow("Resources/yellow.png");
-	QIcon lightGreen("Resources/green.png");
-	buttonRed->setIcon(lightOff);
-	buttonYellow->setIcon(lightOff);
-	buttonGreen->setIcon(lightOff);
+	QIcon* iconBlack = new QIcon("Resources/black.png");
+	buttonRed->setIcon(*iconBlack);
+	buttonYellow->setIcon(*iconBlack);
+	buttonGreen->setIcon(*iconBlack);
+	delete iconBlack;
+	QIcon* icon = 0;
 	switch(mStatus)
 	{
 	case STATUS::ABSENT:
-		buttonRed->setIcon(lightRed);
+		icon = new QIcon("Resources/red.png");
+		buttonRed->setIcon(*icon);
 		break;
 	case STATUS::BUSY:
-		buttonYellow->setIcon(lightYellow);
+		icon = new QIcon("Resources/yellow.png");
+		buttonYellow->setIcon(*icon);
 		break;
 	case STATUS::AVAILABE:
-		buttonGreen->setIcon(lightGreen);
+		icon = new QIcon("Resources/green.png");
+		buttonGreen->setIcon(*icon);
 	}
-	
-	
+	delete icon;
+			
 }// END updateStatus
 
 // create action for the tray icon menu
