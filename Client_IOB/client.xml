@@ -1,7 +1,6 @@
 
-<client>
-    <id>0</id>
-    <name>Gordian</name>
+<client id="0">
+    <name>gordian</name>
     <status>0</status>
     <location></location>
     <phone></phone>

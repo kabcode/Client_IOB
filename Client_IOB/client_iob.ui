@@ -58,8 +58,27 @@
            <height>0</height>
           </size>
          </property>
+         <property name="autoFillBackground">
+          <bool>false</bool>
+         </property>
+         <property name="styleSheet">
+          <string notr="true">border: none;
+background: none;</string>
+         </property>
          <property name="text">
-          <string>PushButton</string>
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>75</width>
+           <height>75</height>
+          </size>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -90,8 +109,18 @@
            <height>75</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">border: none;
+background: none;</string>
+         </property>
          <property name="text">
-          <string>PushButton</string>
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>75</width>
+           <height>75</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -122,8 +151,18 @@
            <height>75</height>
           </size>
          </property>
+         <property name="styleSheet">
+          <string notr="true">border: none;
+background: none;</string>
+         </property>
          <property name="text">
-          <string>PushButton</string>
+          <string/>
+         </property>
+         <property name="iconSize">
+          <size>
+           <width>75</width>
+           <height>75</height>
+          </size>
          </property>
         </widget>
        </item>
@@ -212,9 +251,6 @@
      </item>
     </layout>
    </widget>
-   <zorder>idLabel</zorder>
-   <zorder>horizontalLayoutWidget_3</zorder>
-   <zorder>gridLayoutWidget</zorder>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">

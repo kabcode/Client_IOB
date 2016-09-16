@@ -124,8 +124,7 @@ void Client_IOB::setStatus(QDomDocument doc)
 {
 	// get the value of the document nodes
 	QDomElement root = doc.firstChildElement("client");
-	QDomAttr domID = root.attributeNode("id");
-	mID = domID.toText.toInt();
+	mID = root.attribute("id").toInt();
 	qDebug() << mID;
 	// load the app with STATUS::AVAILABLE
 	QDomElement domStatus = root.firstChildElement("status");
@@ -243,19 +242,23 @@ void Client_IOB::updateStatus(int newStatus)
 	mStatus = newStatus;
 	qDebug() << "New Status: " << mStatus;
 	// set the semafore
-	buttonRed->setText("FALSE");
-	buttonYellow->setText("FALSE");
-	buttonGreen->setText("FALSE");
+	QIcon lightOff("Resources/black.png");
+	QIcon lightRed("Resources/red.png");
+	QIcon lightYellow("Resources/yellow.png");
+	QIcon lightGreen("Resources/green.png");
+	buttonRed->setIcon(lightOff);
+	buttonYellow->setIcon(lightOff);
+	buttonGreen->setIcon(lightOff);
 	switch(mStatus)
 	{
 	case STATUS::ABSENT:
-		buttonRed->setText("TRUE");
+		buttonRed->setIcon(lightRed);
 		break;
 	case STATUS::BUSY:
-		buttonYellow->setText("TRUE");
+		buttonYellow->setIcon(lightYellow);
 		break;
 	case STATUS::AVAILABE:
-		buttonGreen->setText("TRUE");
+		buttonGreen->setIcon(lightGreen);
 	}
 	
 	

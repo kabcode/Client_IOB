@@ -84,6 +84,12 @@ public:
         buttonAbsent->setMinimumSize(QSize(75, 75));
         buttonAbsent->setMaximumSize(QSize(16777215, 16777215));
         buttonAbsent->setBaseSize(QSize(0, 0));
+        buttonAbsent->setAutoFillBackground(false);
+        buttonAbsent->setStyleSheet(QLatin1String("border: none;\n"
+"background: none;"));
+        buttonAbsent->setIconSize(QSize(75, 75));
+        buttonAbsent->setCheckable(false);
+        buttonAbsent->setChecked(false);
 
         verticalLayout->addWidget(buttonAbsent);
 
@@ -96,6 +102,9 @@ public:
         sizePolicy.setHeightForWidth(buttonBusy->sizePolicy().hasHeightForWidth());
         buttonBusy->setSizePolicy(sizePolicy);
         buttonBusy->setMinimumSize(QSize(75, 75));
+        buttonBusy->setStyleSheet(QLatin1String("border: none;\n"
+"background: none;"));
+        buttonBusy->setIconSize(QSize(75, 75));
 
         verticalLayout->addWidget(buttonBusy);
 
@@ -108,6 +117,9 @@ public:
         sizePolicy.setHeightForWidth(buttonAvailable->sizePolicy().hasHeightForWidth());
         buttonAvailable->setSizePolicy(sizePolicy);
         buttonAvailable->setMinimumSize(QSize(75, 75));
+        buttonAvailable->setStyleSheet(QLatin1String("border: none;\n"
+"background: none;"));
+        buttonAvailable->setIconSize(QSize(75, 75));
 
         verticalLayout->addWidget(buttonAvailable);
 
@@ -177,8 +189,6 @@ public:
         gridLayout->addWidget(labelPhone, 0, 1, 1, 1);
 
         Client_IOBClass->setCentralWidget(centralWidget);
-        horizontalLayoutWidget_3->raise();
-        gridLayoutWidget->raise();
         mainToolBar = new QToolBar(Client_IOBClass);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
         Client_IOBClass->addToolBar(Qt::TopToolBarArea, mainToolBar);
@@ -194,9 +204,9 @@ public:
     void retranslateUi(QMainWindow *Client_IOBClass)
     {
         Client_IOBClass->setWindowTitle(QApplication::translate("Client_IOBClass", "Client - InOutBoard", 0));
-        buttonAbsent->setText(QApplication::translate("Client_IOBClass", "PushButton", 0));
-        buttonBusy->setText(QApplication::translate("Client_IOBClass", "PushButton", 0));
-        buttonAvailable->setText(QApplication::translate("Client_IOBClass", "PushButton", 0));
+        buttonAbsent->setText(QString());
+        buttonBusy->setText(QString());
+        buttonAvailable->setText(QString());
         pushButtonUpdate->setText(QApplication::translate("Client_IOBClass", "Update", 0));
         labelNotes->setText(QApplication::translate("Client_IOBClass", "Notes", 0));
         labelLocation->setText(QApplication::translate("Client_IOBClass", "Location", 0));
