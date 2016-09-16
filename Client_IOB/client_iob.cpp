@@ -50,7 +50,7 @@ QDomDocument Client_IOB::loadXMLDocument(QString fileName)
 			xmlWriter.setAutoFormatting(true);
 			xmlWriter.writeStartDocument();
 			xmlWriter.writeStartElement("client");
-			xmlWriter.writeTextElement(QString("id"), "0");
+			xmlWriter.writeAttribute(QString("id"), "0");
 			xmlWriter.writeTextElement(QString("name"), "");
 			xmlWriter.writeTextElement(QString("status"), QString::number(Client_IOB::STATUS::ABSENT));
 			xmlWriter.writeEndElement();
@@ -108,7 +108,7 @@ void Client_IOB::writeXMLDocument()
 	QXmlStreamWriter writer(&file);
 	writer.setAutoFormatting(true);
 	writer.writeStartElement("client");
-	writer.writeTextElement("id",       QString::number(mID));
+	writer.writeAttribute("id", QString::number(mID));
 	writer.writeTextElement("name",     mName);
 	writer.writeTextElement("status",   QString::number(mStatus));
 	writer.writeTextElement("location", mLocation);
@@ -124,8 +124,8 @@ void Client_IOB::setStatus(QDomDocument doc)
 {
 	// get the value of the document nodes
 	QDomElement root = doc.firstChildElement("client");
-	QDomElement domID = root.firstChildElement("id");
-	mID = domID.text().toInt();
+	QDomAttr domID = root.attributeNode("id");
+	mID = domID.toText.toInt();
 	qDebug() << mID;
 	// load the app with STATUS::AVAILABLE
 	QDomElement domStatus = root.firstChildElement("status");
@@ -225,7 +225,6 @@ void Client_IOB::initializeUIComponents()
 	trayIcon->setContextMenu(trayIconMenu);
 	trayIcon->show();
 	connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
-
 
 }// END initializeUIComponents
 
