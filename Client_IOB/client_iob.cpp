@@ -89,7 +89,6 @@ QDomDocument Client_IOB::loadXMLDocument(QString fileName)
 		QApplication::exit(EXIT_FAILURE);
 	}
 
-	// return QDomDocument
 	return clientXML;
 } // END loadXMLDocument
 
@@ -228,7 +227,6 @@ void Client_IOB::initializeUIComponents()
 	trayIcon->setIcon(icon);
 	trayIcon->setContextMenu(trayIconMenu);
 	trayIcon->show();
-	//connect(trayIcon, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), this, SLOT(iconActivated(QSystemTrayIcon::ActivationReason)));
 
 }// END initializeUIComponents
 
