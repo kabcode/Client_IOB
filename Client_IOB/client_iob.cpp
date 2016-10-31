@@ -19,8 +19,8 @@ Client_IOB::Client_IOB(QWidget *parent)
 	this->setStatus(mStatusXML);
 	
 	// contact server
-	//connect(mTCPSocket, SIGNAL(readyRead()), this, SLOT(showMessage()));
-	//this->contactServer(mTCPSocket);
+	connect(mTCPSocket, SIGNAL(readyRead()), this, SLOT(showMessage()));
+	this->contactServer(mTCPSocket);
 
 	// set UI
 	ui.setupUi(this);
@@ -130,8 +130,7 @@ void Client_IOB::setStatus(QDomDocument doc)
 	qDebug() << mID;
 	// load the app with STATUS::AVAILABLE
 	QDomElement domStatus = root.firstChildElement("status");
-	/* mStatus = domStatus.text().toInt(); */
-	mStatus = STATUS::AVAILABE;
+	mStatus = domStatus.text().toInt();
 	qDebug() << mStatus;
 	QDomElement domName = root.firstChildElement("name");
 	// if the name tag is empty ask for user name
@@ -243,13 +242,12 @@ void Client_IOB::updateMember()
 void Client_IOB::updateStatus(int newStatus)
 {
 	mStatus = newStatus;
-	//qDebug() << "New Status: " << mStatus;
 	// set the semafore
 	QIcon* iconBlack = new QIcon("Resources/black.png");
 	buttonRed->setIcon(*iconBlack);
 	buttonYellow->setIcon(*iconBlack);
 	buttonGreen->setIcon(*iconBlack);
-	delete iconBlack;
+	
 	QIcon* icon = 0;
 	switch(mStatus)
 	{
@@ -265,7 +263,10 @@ void Client_IOB::updateStatus(int newStatus)
 		icon = new QIcon("Resources/green.png");
 		buttonGreen->setIcon(*icon);
 	}
+
+	// clean up pointers
 	delete icon;
+	delete iconBlack;
 			
 }// END updateStatus
 
