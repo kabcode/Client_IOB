@@ -1,6 +1,7 @@
 #ifndef CLIENT_IOB_H
 #define CLIENT_IOB_H
 
+// standard includes 
 #include <QtWidgets/QMainWindow>
 #include "ui_client_iob.h"
 // qt network library
@@ -18,9 +19,9 @@
 #include <QSystemTrayIcon>
 #include <QMenu>
 
-//**************//
-// Client Class //
-//************* //
+//******************//
+//   Client Class   //
+//******************//
 
 class Client_IOB : public QMainWindow
 {
@@ -37,8 +38,14 @@ public:
 	};
 
 private slots:
+	// update the internal member variables
 	void updateMember();
+	// update the visible status
 	void updateStatus(int);
+	// network slots
+	void readUserList();
+	void displayError(QAbstractSocket::SocketError);
+	void sessionOpened();
 
 private:
 	// member variables
@@ -52,15 +59,20 @@ private:
 	QString      mNotes;
 	
 	// network variables
-	QTcpSocket      *mTCPSocket;
+	QTcpSocket      *mTcpSocket;
+	QDataStream      in;
 	QNetworkSession *mNetworkSession;
+
+	// network functions
 	
 	// private functions
 	QDomDocument loadXMLDocument(QString);
 	void		 writeXMLDocument();
-	void         setStatus(QDomDocument);
-	void         contactServer(QTcpSocket*);
+	void         setStatus();
+	void         contactServer();
+	void		 showMessage();
 
+	
 
 	// UI variables
 	Ui::Client_IOBClass ui;
@@ -75,11 +87,11 @@ private:
 	QPushButton *buttonGreen    = 0;
 	QSignalMapper *signalMapper = 0;
 
-	QSystemTrayIcon *trayIcon = 0;
+	QSharedPointer<QSystemTrayIcon> trayIcon;
 	QMenu *trayIconMenu       = 0;
-	QAction *minimizeAction;
-	QAction *restoreAction;
-	QAction *quitAction;
+	QAction *minimizeAction   = 0;
+	QAction *restoreAction    = 0; 
+	QAction *quitAction       = 0;
 
 	// UI functions
 	void initializeUIComponents();

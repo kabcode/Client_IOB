@@ -1,13 +1,13 @@
-
-
 #include "client_iob.h"
-// debug library
-#include <QDebug>
 
+//******************//
+//   Client Class   //
+//******************//
 
+// constructor
 Client_IOB::Client_IOB(QWidget *parent)
 	: QMainWindow(parent),
-	mTCPSocket(new QTcpSocket(this)),
+	mTcpSocket(new QTcpSocket(this)),
 	mNetworkSession(Q_NULLPTR)
 {
 	// start client
@@ -16,11 +16,23 @@ Client_IOB::Client_IOB(QWidget *parent)
 	mStatusXML = this->loadXMLDocument(mXMLFileName);
 	
 	// set status based on xml document
-	this->setStatus(mStatusXML);
-	
+	this->setStatus();
+		
 	// contact server
-	connect(mTCPSocket, SIGNAL(readyRead()), this, SLOT(showMessage()));
-	this->contactServer(mTCPSocket);
+	in.setDevice(mTcpSocket);
+	in.setVersion(QDataStream::Qt_5_7);
+	connect(mTcpSocket, &QIODevice::readyRead, this, &Client_IOB::showMessage);
+	typedef void(QAbstractSocket::*QAbstractSocketErrorSignal)(QAbstractSocket::SocketError);
+	connect(mTcpSocket, static_cast<QAbstractSocketErrorSignal>(&QAbstractSocket::error), this, &Client_IOB::displayError);
+
+	QNetworkConfigurationManager manager;
+	QNetworkConfiguration config = manager.defaultConfiguration();
+	mNetworkSession = new QNetworkSession(config, this);
+	connect(mNetworkSession, &QNetworkSession::opened, this, &Client_IOB::sessionOpened);
+
+	mNetworkSession->open();
+
+	this->contactServer();
 
 	// set UI
 	ui.setupUi(this);
@@ -28,18 +40,18 @@ Client_IOB::Client_IOB(QWidget *parent)
 
 } // END constructor
 
+// destructor
 Client_IOB::~Client_IOB()
 {
 	writeXMLDocument();
+	delete trayIconMenu;
 	delete signalMapper;
-	delete mTCPSocket;
+	delete mTcpSocket;
 } // END destructor
 
   // load the XML document
 QDomDocument Client_IOB::loadXMLDocument(QString fileName)
 {
-	QDomDocument clientXML(fileName);
-
 	// check if client list exist
 	QFileInfo checkFile(fileName);
 	if (!checkFile.exists() && !checkFile.isFile())
@@ -80,7 +92,10 @@ QDomDocument Client_IOB::loadXMLDocument(QString fileName)
 		messageBox.setFixedSize(500, 200);
 		QApplication::exit(EXIT_FAILURE);
 	}
+	xmlFile.close();
+
 	// content is not correct
+	QDomDocument clientXML(fileName);
 	if (!clientXML.setContent(&xmlFile))
 	{
 		QMessageBox messageBox;
@@ -88,7 +103,7 @@ QDomDocument Client_IOB::loadXMLDocument(QString fileName)
 		messageBox.setFixedSize(500, 200);
 		QApplication::exit(EXIT_FAILURE);
 	}
-
+	
 	return clientXML;
 } // END loadXMLDocument
 
@@ -122,10 +137,10 @@ void Client_IOB::writeXMLDocument()
 }// END writeXMLDocument
 
 // fill the member variables with the content of the xml document
-void Client_IOB::setStatus(QDomDocument doc)
+void Client_IOB::setStatus()
 {
 	// get the value of the document nodes
-	QDomElement root = doc.firstChildElement("client");
+	QDomElement root = mStatusXML.firstChildElement("client");
 	mID = root.attribute("id").toInt();
 	qDebug() << mID;
 	// load the app with STATUS::AVAILABLE
@@ -162,20 +177,31 @@ void Client_IOB::setStatus(QDomDocument doc)
 	mPhone = domPhone.text();
 	QDomElement domNotes = root.firstChildElement("notes");
 	mNotes = domNotes.text();	
+	mStatusXML.clear();
+
 }// END setStatus
 
 // contact the server to establish a connection
-void Client_IOB::contactServer(QTcpSocket* socket)
+void Client_IOB::contactServer()
 {
-	QString temp;
-	socket->connectToHost(QHostAddress::LocalHost, 9000);
+	// close existing connections
+	mTcpSocket->abort();
+	QHostAddress addr = QHostAddress::LocalHost;
+	quint16 port = 9000;
+	qDebug() << "Connecting to: " << addr << " Port: " << port;
+	mTcpSocket->connectToHost(addr, port);
 
-	if (socket->waitForConnected(-1))
+	// display connection status
+	if (mTcpSocket->waitForConnected(-1))
+	{
 		qDebug() << "connected";
-	else {
+	}
+	else
+	{
 		qDebug() << "cannot connect";
 		return;
 	}
+	
 }// END contactServer
 
  // setup the ui components
@@ -221,7 +247,7 @@ void Client_IOB::initializeUIComponents()
 	trayIconMenu->addAction(restoreAction);
 	trayIconMenu->addSeparator();
 	trayIconMenu->addAction(quitAction);
-	trayIcon = new QSystemTrayIcon(this);
+	trayIcon = QSharedPointer<QSystemTrayIcon>(new QSystemTrayIcon(this));
 	QIcon icon = QIcon("Resources/kicker.ico");
 	trayIcon->setIcon(icon);
 	trayIcon->setContextMenu(trayIconMenu);
@@ -283,3 +309,59 @@ void Client_IOB::createMenuTrayActions()
 	connect(quitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 
 }// END createMenuTrayActions
+
+// show message send by server to prove connection
+void Client_IOB::showMessage()
+{
+	qDebug() << "recieved handshake";
+
+	in.startTransaction();
+
+	QString message;
+	in >> message;
+
+	if (!in.commitTransaction())
+	{
+		qDebug() << "No message recieved.";
+		return;
+	}
+	qDebug() << message;
+
+}// END showMessage
+
+//
+void Client_IOB::readUserList()
+{
+	// not need at the moment
+}// END readUserList
+
+// displays error messages for network
+void Client_IOB::displayError(QAbstractSocket::SocketError socketError)
+{
+	switch (socketError) {
+	case QAbstractSocket::RemoteHostClosedError:
+		break;
+	case QAbstractSocket::HostNotFoundError:
+		QMessageBox::information(this, tr("IOB Client"),
+			tr("The host was not found. Please check the "
+				"host name and port settings."));
+		break;
+	case QAbstractSocket::ConnectionRefusedError:
+		QMessageBox::information(this, tr("IOB Client"),
+			tr("The connection was refused by the peer. "
+				"Make sure the fortune server is running, "
+				"and check that the host name and port "
+				"settings are correct."));
+		break;
+	default:
+		QMessageBox::information(this, tr("IOB Client"),
+			tr("The following error occurred: %1.")
+			.arg(mTcpSocket->errorString()));
+	}
+}// END display error
+
+// opening a network session to client
+void Client_IOB::sessionOpened()
+{
+	//TODO
+}// END sessionOpened
