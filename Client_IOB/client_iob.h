@@ -43,9 +43,10 @@ private slots:
 	// update the visible status
 	void updateStatus(int);
 	// network slots
-	void readUserList();
-	void displayError(QAbstractSocket::SocketError);
-	void sessionOpened();
+	void connected();
+	void disconnected();
+	void bytesWritten(qint64 bytes);
+	void readyRead();
 
 private:
 	// member variables
@@ -61,18 +62,15 @@ private:
 	// network variables
 	QTcpSocket      *mTcpSocket;
 	QDataStream      in;
-	QNetworkSession *mNetworkSession;
 
 	// network functions
+	void         contactServer();
 	
 	// private functions
 	QDomDocument loadXMLDocument(QString);
 	void		 writeXMLDocument();
 	void         setStatus();
-	void         contactServer();
-	void		 showMessage();
 
-	
 
 	// UI variables
 	Ui::Client_IOBClass ui;

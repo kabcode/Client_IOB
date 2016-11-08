@@ -7,8 +7,7 @@
 // constructor
 Client_IOB::Client_IOB(QWidget *parent)
 	: QMainWindow(parent),
-	mTcpSocket(new QTcpSocket(this)),
-	mNetworkSession(Q_NULLPTR)
+	mTcpSocket(new QTcpSocket(this))
 {
 	// start client
 
@@ -19,19 +18,10 @@ Client_IOB::Client_IOB(QWidget *parent)
 	this->setStatus();
 		
 	// contact server
-	in.setDevice(mTcpSocket);
-	in.setVersion(QDataStream::Qt_5_7);
-	connect(mTcpSocket, &QIODevice::readyRead, this, &Client_IOB::showMessage);
-	typedef void(QAbstractSocket::*QAbstractSocketErrorSignal)(QAbstractSocket::SocketError);
-	connect(mTcpSocket, static_cast<QAbstractSocketErrorSignal>(&QAbstractSocket::error), this, &Client_IOB::displayError);
-
-	QNetworkConfigurationManager manager;
-	QNetworkConfiguration config = manager.defaultConfiguration();
-	mNetworkSession = new QNetworkSession(config, this);
-	connect(mNetworkSession, &QNetworkSession::opened, this, &Client_IOB::sessionOpened);
-
-	mNetworkSession->open();
-
+	connect(mTcpSocket, &QTcpSocket::connected, this, &Client_IOB::connected);
+	connect(mTcpSocket, &QTcpSocket::disconnected, this, &Client_IOB::disconnected);
+	connect(mTcpSocket, &QTcpSocket::bytesWritten, this, &Client_IOB::bytesWritten);
+	connect(mTcpSocket, &QTcpSocket::readyRead, this, &Client_IOB::readyRead);
 	this->contactServer();
 
 	// set UI
@@ -188,20 +178,15 @@ void Client_IOB::contactServer()
 	mTcpSocket->abort();
 	QHostAddress addr = QHostAddress::LocalHost;
 	quint16 port = 9000;
+
 	qDebug() << "Connecting to: " << addr << " Port: " << port;
 	mTcpSocket->connectToHost(addr, port);
 
-	// display connection status
-	if (mTcpSocket->waitForConnected(-1))
+	if (!mTcpSocket->waitForConnected(3000))
 	{
-		qDebug() << "connected";
+		qDebug() << "Error " << mTcpSocket->errorString();
 	}
-	else
-	{
-		qDebug() << "cannot connect";
-		return;
-	}
-	
+
 }// END contactServer
 
  // setup the ui components
@@ -310,58 +295,36 @@ void Client_IOB::createMenuTrayActions()
 
 }// END createMenuTrayActions
 
-// show message send by server to prove connection
-void Client_IOB::showMessage()
+void Client_IOB::connected()
 {
-	qDebug() << "recieved handshake";
+	qDebug() << "Connected!";
+	// send test bytes to the client
+	QByteArray block;
+	QDataStream out(&block, QIODevice::WriteOnly);
 
-	in.startTransaction();
+	out.setVersion(QDataStream::Qt_5_7);
+	QString hello("Hello Server!");
+	out << hello;
 
+	mTcpSocket->write(block);
+	mTcpSocket->flush();
+	qDebug() << "Message sent";
+}
+void Client_IOB::disconnected()
+{
+	qDebug() << "Disconnected!";
+	mTcpSocket->close();
+}
+void Client_IOB::bytesWritten(qint64 bytes)
+{
+	qDebug() << "Wrote" << bytes << "Bytes.";
+}
+void Client_IOB::readyRead()
+{
+	qDebug() << "Reading...";
+	QDataStream clientReadStream(mTcpSocket);
 	QString message;
-	in >> message;
 
-	if (!in.commitTransaction())
-	{
-		qDebug() << "No message recieved.";
-		return;
-	}
+	clientReadStream >> message;
 	qDebug() << message;
-
-}// END showMessage
-
-//
-void Client_IOB::readUserList()
-{
-	// not need at the moment
-}// END readUserList
-
-// displays error messages for network
-void Client_IOB::displayError(QAbstractSocket::SocketError socketError)
-{
-	switch (socketError) {
-	case QAbstractSocket::RemoteHostClosedError:
-		break;
-	case QAbstractSocket::HostNotFoundError:
-		QMessageBox::information(this, tr("IOB Client"),
-			tr("The host was not found. Please check the "
-				"host name and port settings."));
-		break;
-	case QAbstractSocket::ConnectionRefusedError:
-		QMessageBox::information(this, tr("IOB Client"),
-			tr("The connection was refused by the peer. "
-				"Make sure the fortune server is running, "
-				"and check that the host name and port "
-				"settings are correct."));
-		break;
-	default:
-		QMessageBox::information(this, tr("IOB Client"),
-			tr("The following error occurred: %1.")
-			.arg(mTcpSocket->errorString()));
-	}
-}// END display error
-
-// opening a network session to client
-void Client_IOB::sessionOpened()
-{
-	//TODO
-}// END sessionOpened
+}
