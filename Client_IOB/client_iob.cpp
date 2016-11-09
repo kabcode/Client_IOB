@@ -7,13 +7,12 @@
 // constructor
 Client_IOB::Client_IOB(QWidget *parent)
 	: QMainWindow(parent),
+	mStatusXML("status"),
 	mTcpSocket(new QTcpSocket(this))
 {
-	// start client
-
 	// load xml document with last status
-	mStatusXML = this->loadXMLDocument(mXMLFileName);
-	
+	this->loadXMLDocument();
+		
 	// set status based on xml document
 	this->setStatus();
 		
@@ -27,27 +26,29 @@ Client_IOB::Client_IOB(QWidget *parent)
 	// set UI
 	ui.setupUi(this);
 	this->initializeUIComponents();
-
+	
 } // END constructor
 
 // destructor
 Client_IOB::~Client_IOB()
 {
+	
 	writeXMLDocument();
 	delete trayIconMenu;
 	delete signalMapper;
 	delete mTcpSocket;
+	
 } // END destructor
 
   // load the XML document
-QDomDocument Client_IOB::loadXMLDocument(QString fileName)
+void Client_IOB::loadXMLDocument()
 {
 	// check if client list exist
-	QFileInfo checkFile(fileName);
+	QFile file(mXMLFileName);
+	QFileInfo checkFile(file);
 	if (!checkFile.exists() && !checkFile.isFile())
 	{
 		// create a new xml document
-		QFile file(fileName);
 		if (file.open(QIODevice::WriteOnly))
 		{
 			// write a new XML document for an unkown user
@@ -71,30 +72,24 @@ QDomDocument Client_IOB::loadXMLDocument(QString fileName)
 			QApplication::exit(EXIT_FAILURE);
 		}
 	}
-
-	// load the xml file as QDomDocument
-	QFile xmlFile(fileName);
+	
 	// if the file cant be read
-	if (!xmlFile.open(QIODevice::ReadOnly))
+	if (!file.open(QIODevice::ReadOnly))
 	{
 		QMessageBox messageBox;
 		messageBox.critical(0, "Error", "Unable to read XML file!!");
 		messageBox.setFixedSize(500, 200);
 		QApplication::exit(EXIT_FAILURE);
 	}
-	xmlFile.close();
-
 	// content is not correct
-	QDomDocument clientXML(fileName);
-	if (!clientXML.setContent(&xmlFile))
+	if (!mStatusXML.setContent(&file))
 	{
+		file.close();
 		QMessageBox messageBox;
 		messageBox.critical(0, "Error", "File contains wrong content!");
 		messageBox.setFixedSize(500, 200);
 		QApplication::exit(EXIT_FAILURE);
 	}
-	
-	return clientXML;
 } // END loadXMLDocument
 
 // write the user data into a xml document
@@ -133,7 +128,6 @@ void Client_IOB::setStatus()
 	QDomElement root = mStatusXML.firstChildElement("client");
 	mID = root.attribute("id").toInt();
 	qDebug() << mID;
-	// load the app with STATUS::AVAILABLE
 	QDomElement domStatus = root.firstChildElement("status");
 	mStatus = domStatus.text().toInt();
 	qDebug() << mStatus;
@@ -150,7 +144,7 @@ void Client_IOB::setStatus()
 		{
 			mName = text;
 		}
-		// if use doesnt provide a name
+		// if user doesnt provide a name
 		else
 		{
 			QMessageBox messageBox;
@@ -159,15 +153,20 @@ void Client_IOB::setStatus()
 			QApplication::exit(EXIT_FAILURE);
 		}	
 	}
-	else{ mName = domName.text();}
+	else
+	{ 
+		mName = domName.text();
+	}
 	qDebug() << mName;
 	QDomElement domLocation = root.firstChildElement("location");
 	mLocation = domLocation.text();
+	qDebug() << mLocation;
 	QDomElement domPhone = root.firstChildElement("phone");
 	mPhone = domPhone.text();
+	qDebug() << mPhone;
 	QDomElement domNotes = root.firstChildElement("notes");
-	mNotes = domNotes.text();	
-	mStatusXML.clear();
+	mNotes = domNotes.text();
+	qDebug() << mNotes;
 
 }// END setStatus
 
@@ -298,11 +297,12 @@ void Client_IOB::createMenuTrayActions()
 void Client_IOB::connected()
 {
 	qDebug() << "Connected!";
-	// send test bytes to the client
+	// send ID to server
 	QByteArray block;
 	QDataStream out(&block, QIODevice::WriteOnly);
-
 	out.setVersion(QDataStream::Qt_5_7);
+	
+	// first send ID and IP to update the servers list
 	QString hello("Hello Server!");
 	out << hello;
 

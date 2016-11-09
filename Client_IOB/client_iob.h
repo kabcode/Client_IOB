@@ -30,13 +30,13 @@ class Client_IOB : public QMainWindow
 public:
 	Client_IOB(QWidget *parent = 0);
 	~Client_IOB();
+	
 	enum STATUS
 	{
 		AVAILABE,
 		BUSY,
 		ABSENT
 	};
-
 private slots:
 	// update the internal member variables
 	void updateMember();
@@ -58,6 +58,8 @@ private:
 	QString      mLocation;
 	QString      mPhone;
 	QString      mNotes;
+	QHostAddress mServerAddress;
+	qint64		 mServerPort;
 	
 	// network variables
 	QTcpSocket      *mTcpSocket;
@@ -67,9 +69,9 @@ private:
 	void         contactServer();
 	
 	// private functions
-	QDomDocument loadXMLDocument(QString);
-	void		 writeXMLDocument();
-	void         setStatus();
+	void loadXMLDocument();
+	void writeXMLDocument();
+	void setStatus();
 
 
 	// UI variables
