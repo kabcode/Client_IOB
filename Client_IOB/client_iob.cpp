@@ -17,12 +17,17 @@ Client_IOB::Client_IOB(QWidget *parent)
 	this->setStatus();
 		
 	// contact server
-	connect(mTcpSocket, &QTcpSocket::connected, this, &Client_IOB::connected);
-	connect(mTcpSocket, &QTcpSocket::disconnected, this, &Client_IOB::disconnected);
-	connect(mTcpSocket, &QTcpSocket::bytesWritten, this, &Client_IOB::bytesWritten);
-	connect(mTcpSocket, &QTcpSocket::readyRead, this, &Client_IOB::readyRead);
+	mServerAddress = QHostAddress::LocalHost;
+	mServerPort = 9000;
+	mUrl = QUrl(QString("ws://%1:%2").arg(mServerAddress.toString()).arg(mServerPort));
+	qDebug() << mUrl;
+	connect(&mWebSocket, &QWebSocket::connected, this, &Client_IOB::onConnected);
+	connect(&mWebSocket, &QWebSocket::disconnected, this, &Client_IOB::closed);
+	mWebSocket.open(QUrl(mUrl));
+	/*
+	
 	this->contactServer();
-
+	*/
 	// set UI
 	ui.setupUi(this);
 	this->initializeUIComponents();
@@ -92,35 +97,6 @@ void Client_IOB::loadXMLDocument()
 	}
 } // END loadXMLDocument
 
-// write the user data into a xml document
-void Client_IOB::writeXMLDocument()
-{
-	// open xml file
-	QFile file(mXMLFileName);
-	if (!file.open(QFile::WriteOnly))
-	{
-		// error message
-		QMessageBox messageBox;
-		messageBox.critical(0, "Error", "Unable to write XML file!!");
-		messageBox.setFixedSize(500, 200);
-		return;
-	}
-
-	// write all the status information in the xml document
-	QXmlStreamWriter writer(&file);
-	writer.setAutoFormatting(true);
-	writer.writeStartElement("client");
-	writer.writeAttribute("id", QString::number(mID));
-	writer.writeTextElement("name",     mName);
-	writer.writeTextElement("status",   QString::number(mStatus));
-	writer.writeTextElement("location", mLocation);
-	writer.writeTextElement("phone",    mPhone);
-	writer.writeTextElement("notes",    mNotes);
-	writer.writeEndElement();
-
-	qDebug() << "Wrote XML file:" << mXMLFileName;
-}// END writeXMLDocument
-
 // fill the member variables with the content of the xml document
 void Client_IOB::setStatus()
 {
@@ -171,15 +147,16 @@ void Client_IOB::setStatus()
 }// END setStatus
 
 // contact the server to establish a connection
+/*
 void Client_IOB::contactServer()
 {
-	// close existing connections
-	mTcpSocket->abort();
-	QHostAddress addr = QHostAddress::LocalHost;
-	quint16 port = 9000;
+	connect(mTcpSocket, &QTcpSocket::connected,    this, &Client_IOB::connected);
+	connect(mTcpSocket, &QTcpSocket::disconnected, this, &Client_IOB::disconnected);
+	connect(mTcpSocket, &QTcpSocket::bytesWritten, this, &Client_IOB::bytesWritten);
+	connect(mTcpSocket, &QTcpSocket::readyRead,    this, &Client_IOB::readyRead);
 
-	qDebug() << "Connecting to: " << addr << " Port: " << port;
-	mTcpSocket->connectToHost(addr, port);
+	qDebug() << "Connecting to: " << mServerAddress << " Port: " << mServerPort;
+	mTcpSocket->connectToHost(mServerAddress, mServerPort);
 
 	if (!mTcpSocket->waitForConnected(3000))
 	{
@@ -188,6 +165,22 @@ void Client_IOB::contactServer()
 
 }// END contactServer
 
+// SLOT: when activated send the own id to the server to start update cycle
+void Client_IOB::connected()
+{
+	qDebug() << "Connected!";
+	// send ID to server
+	QByteArray block;
+	QDataStream out(&block, QIODevice::WriteOnly);
+	out.setVersion(QDataStream::Qt_5_7);
+
+	// first send ID to update the servers list
+	out << mID;
+	mTcpSocket->write(block);
+	mTcpSocket->flush();
+	qDebug() << "ID sent";
+}
+*/
  // setup the ui components
 void Client_IOB::initializeUIComponents()
 {
@@ -294,22 +287,7 @@ void Client_IOB::createMenuTrayActions()
 
 }// END createMenuTrayActions
 
-void Client_IOB::connected()
-{
-	qDebug() << "Connected!";
-	// send ID to server
-	QByteArray block;
-	QDataStream out(&block, QIODevice::WriteOnly);
-	out.setVersion(QDataStream::Qt_5_7);
-	
-	// first send ID and IP to update the servers list
-	QString hello("Hello Server!");
-	out << hello;
-
-	mTcpSocket->write(block);
-	mTcpSocket->flush();
-	qDebug() << "Message sent";
-}
+/*
 void Client_IOB::disconnected()
 {
 	qDebug() << "Disconnected!";
@@ -327,4 +305,46 @@ void Client_IOB::readyRead()
 
 	clientReadStream >> message;
 	qDebug() << message;
+}
+*/
+// write the user data into a xml document
+void Client_IOB::writeXMLDocument()
+{
+	// open xml file
+	QFile file(mXMLFileName);
+	if (!file.open(QFile::WriteOnly))
+	{
+		// error message
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "Unable to write XML file!!");
+		messageBox.setFixedSize(500, 200);
+		return;
+	}
+
+	// write all the status information in the xml document
+	QXmlStreamWriter writer(&file);
+	writer.setAutoFormatting(true);
+	writer.writeStartElement("client");
+	writer.writeAttribute("id", QString::number(mID));
+	writer.writeTextElement("name", mName);
+	writer.writeTextElement("status", QString::number(mStatus));
+	writer.writeTextElement("location", mLocation);
+	writer.writeTextElement("phone", mPhone);
+	writer.writeTextElement("notes", mNotes);
+	writer.writeEndElement();
+
+	qDebug() << "Wrote XML file:" << mXMLFileName;
+}// END writeXMLDocument
+
+void Client_IOB::onConnected()
+{
+	qDebug() << "WebSocket connected";
+	connect(&mWebSocket, &QWebSocket::textMessageReceived, this, &Client_IOB::onTextMessageReceived);
+	mWebSocket.sendTextMessage(QStringLiteral("Hello, world!"));
+}
+
+void Client_IOB::onTextMessageReceived(QString message)
+{
+	qDebug() << "Message received:" << message;
+	mWebSocket.close();
 }

@@ -6,6 +6,8 @@
 #include "ui_client_iob.h"
 // qt network library
 #include <QtNetwork>
+// qt web socket lib
+#include <QtWebSockets>
 // Library for processing XML documents
 #include <QDomDocument>
 #include <QXMLStreamReader>
@@ -37,16 +39,23 @@ public:
 		BUSY,
 		ABSENT
 	};
+
+signals:
+	void closed();
+
 private slots:
 	// update the internal member variables
 	void updateMember();
 	// update the visible status
 	void updateStatus(int);
 	// network slots
-	void connected();
-	void disconnected();
-	void bytesWritten(qint64 bytes);
-	void readyRead();
+	//void connected();
+	//void disconnected();
+	//void bytesWritten(qint64 bytes);
+	//void readyRead();
+
+	void onConnected();
+	void onTextMessageReceived(QString message);
 
 private:
 	// member variables
@@ -59,9 +68,11 @@ private:
 	QString      mPhone;
 	QString      mNotes;
 	QHostAddress mServerAddress;
-	qint64		 mServerPort;
+	qint16		 mServerPort;
 	
 	// network variables
+	QWebSocket		mWebSocket;
+	QUrl			 mUrl;
 	QTcpSocket      *mTcpSocket;
 	QDataStream      in;
 
