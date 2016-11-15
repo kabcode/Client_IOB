@@ -49,11 +49,6 @@ private slots:
 	// update the visible status
 	void updateStatus(int);
 	// network slots
-	//void connected();
-	//void disconnected();
-	//void bytesWritten(qint64 bytes);
-	//void readyRead();
-
 	void onConnected();
 	void onTextMessageReceived(QString message);
 
@@ -73,11 +68,6 @@ private:
 	// network variables
 	QWebSocket		mWebSocket;
 	QUrl			 mUrl;
-	QTcpSocket      *mTcpSocket;
-	QDataStream      in;
-
-	// network functions
-	void         contactServer();
 	
 	// private functions
 	void loadXMLDocument();

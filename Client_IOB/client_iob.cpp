@@ -7,8 +7,7 @@
 // constructor
 Client_IOB::Client_IOB(QWidget *parent)
 	: QMainWindow(parent),
-	mStatusXML("status"),
-	mTcpSocket(new QTcpSocket(this))
+	mStatusXML("status")
 {
 	// load xml document with last status
 	this->loadXMLDocument();
@@ -24,10 +23,7 @@ Client_IOB::Client_IOB(QWidget *parent)
 	connect(&mWebSocket, &QWebSocket::connected, this, &Client_IOB::onConnected);
 	connect(&mWebSocket, &QWebSocket::disconnected, this, &Client_IOB::closed);
 	mWebSocket.open(QUrl(mUrl));
-	/*
-	
-	this->contactServer();
-	*/
+
 	// set UI
 	ui.setupUi(this);
 	this->initializeUIComponents();
@@ -37,12 +33,9 @@ Client_IOB::Client_IOB(QWidget *parent)
 // destructor
 Client_IOB::~Client_IOB()
 {
-	
 	writeXMLDocument();
 	delete trayIconMenu;
-	delete signalMapper;
-	delete mTcpSocket;
-	
+	delete signalMapper;	
 } // END destructor
 
   // load the XML document
@@ -146,42 +139,7 @@ void Client_IOB::setStatus()
 
 }// END setStatus
 
-// contact the server to establish a connection
-/*
-void Client_IOB::contactServer()
-{
-	connect(mTcpSocket, &QTcpSocket::connected,    this, &Client_IOB::connected);
-	connect(mTcpSocket, &QTcpSocket::disconnected, this, &Client_IOB::disconnected);
-	connect(mTcpSocket, &QTcpSocket::bytesWritten, this, &Client_IOB::bytesWritten);
-	connect(mTcpSocket, &QTcpSocket::readyRead,    this, &Client_IOB::readyRead);
-
-	qDebug() << "Connecting to: " << mServerAddress << " Port: " << mServerPort;
-	mTcpSocket->connectToHost(mServerAddress, mServerPort);
-
-	if (!mTcpSocket->waitForConnected(3000))
-	{
-		qDebug() << "Error " << mTcpSocket->errorString();
-	}
-
-}// END contactServer
-
-// SLOT: when activated send the own id to the server to start update cycle
-void Client_IOB::connected()
-{
-	qDebug() << "Connected!";
-	// send ID to server
-	QByteArray block;
-	QDataStream out(&block, QIODevice::WriteOnly);
-	out.setVersion(QDataStream::Qt_5_7);
-
-	// first send ID to update the servers list
-	out << mID;
-	mTcpSocket->write(block);
-	mTcpSocket->flush();
-	qDebug() << "ID sent";
-}
-*/
- // setup the ui components
+// setup the ui components
 void Client_IOB::initializeUIComponents()
 {
 	// set title
@@ -287,26 +245,6 @@ void Client_IOB::createMenuTrayActions()
 
 }// END createMenuTrayActions
 
-/*
-void Client_IOB::disconnected()
-{
-	qDebug() << "Disconnected!";
-	mTcpSocket->close();
-}
-void Client_IOB::bytesWritten(qint64 bytes)
-{
-	qDebug() << "Wrote" << bytes << "Bytes.";
-}
-void Client_IOB::readyRead()
-{
-	qDebug() << "Reading...";
-	QDataStream clientReadStream(mTcpSocket);
-	QString message;
-
-	clientReadStream >> message;
-	qDebug() << message;
-}
-*/
 // write the user data into a xml document
 void Client_IOB::writeXMLDocument()
 {
