@@ -16,14 +16,8 @@ Client_IOB::Client_IOB(QWidget *parent)
 	this->setStatus();
 		
 	// contact server
-	mServerAddress = QHostAddress::LocalHost;
-	mServerPort = 9000;
-	mUrl = QUrl(QString("ws://%1:%2").arg(mServerAddress.toString()).arg(mServerPort));
-	qDebug() << mUrl;
-	connect(&mWebSocket, &QWebSocket::connected, this, &Client_IOB::onConnected);
-	connect(&mWebSocket, &QWebSocket::disconnected, this, &Client_IOB::closed);
-	mWebSocket.open(QUrl(mUrl));
-
+	this->contactServer();
+	
 	// set UI
 	ui.setupUi(this);
 	this->initializeUIComponents();
@@ -274,11 +268,37 @@ void Client_IOB::writeXMLDocument()
 	qDebug() << "Wrote XML file:" << mXMLFileName;
 }// END writeXMLDocument
 
+// start connection to server
+void Client_IOB::contactServer()
+{
+	mServerAddress = QHostAddress::LocalHost;
+	mServerPort = 9000;
+	mUrl = QUrl(QString("ws://%1:%2").arg(mServerAddress.toString()).arg(mServerPort));
+	qDebug() << mUrl;
+	connect(&mWebSocket, &QWebSocket::connected, this, &Client_IOB::onConnected);
+	connect(&mWebSocket, &QWebSocket::disconnected, this, &Client_IOB::closed);
+	mWebSocket.open(QUrl(mUrl));
+}
+
 void Client_IOB::onConnected()
 {
 	qDebug() << "WebSocket connected";
 	connect(&mWebSocket, &QWebSocket::textMessageReceived, this, &Client_IOB::onTextMessageReceived);
-	mWebSocket.sendTextMessage(QStringLiteral("Hello, world!"));
+	
+	// send ID if ID == 0, then request IDs
+	if (mID != 0)
+	{
+		QString telegram = QString::number(MESSAGEID::REGISTRATION);
+		telegram.append("#").append(QString::number(mID));
+		mWebSocket.sendTextMessage(telegram);
+	}
+	//request ID by sending a zero
+	else
+	{
+		QString telegram = QString::number(MESSAGEID::REGISTRATION);
+		telegram.append("#").append(QString::number(0));
+		mWebSocket.sendTextMessage(telegram);
+	}
 }
 
 void Client_IOB::onTextMessageReceived(QString message)

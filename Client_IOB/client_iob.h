@@ -33,11 +33,21 @@ public:
 	Client_IOB(QWidget *parent = 0);
 	~Client_IOB();
 	
+	// client status
 	enum STATUS
 	{
 		AVAILABE,
 		BUSY,
 		ABSENT
+	};
+
+	// message control
+	enum MESSAGEID
+	{
+		REQUEST,
+		REGISTRATION,
+		UPDATE,
+		TEST
 	};
 
 signals:
@@ -73,7 +83,7 @@ private:
 	void loadXMLDocument();
 	void writeXMLDocument();
 	void setStatus();
-
+	void contactServer();
 
 	// UI variables
 	Ui::Client_IOBClass ui;
