@@ -89,7 +89,7 @@ void Client_IOB::setStatus()
 {
 	// get the value of the document nodes
 	QDomElement root = mStatusXML.firstChildElement("client");
-	mID = root.attribute("id").toInt();
+	mID = root.attribute("id");
 	qDebug() << mID;
 	QDomElement domStatus = root.firstChildElement("status");
 	mStatus = domStatus.text().toInt();
@@ -257,7 +257,7 @@ void Client_IOB::writeXMLDocument()
 	QXmlStreamWriter writer(&file);
 	writer.setAutoFormatting(true);
 	writer.writeStartElement("client");
-	writer.writeAttribute("id", QString::number(mID));
+	writer.writeAttribute("id", mID.toString());
 	writer.writeTextElement("name", mName);
 	writer.writeTextElement("status", QString::number(mStatus));
 	writer.writeTextElement("location", mLocation);
@@ -289,7 +289,7 @@ void Client_IOB::onConnected()
 	if (mID != 0)
 	{
 		QString telegram = QString::number(MESSAGEID::REGISTRATION);
-		telegram.append("#").append(QString::number(mID));
+		telegram.append("#").append(mID.toString());
 		mWebSocket.sendTextMessage(telegram);
 	}
 	//request ID by sending a zero
