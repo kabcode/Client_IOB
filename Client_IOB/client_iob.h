@@ -66,7 +66,7 @@ private:
 	// member variables
 	QString      mXMLFileName = "client.xml";
 	QDomDocument mStatusXML;
-	QUuid          mID;
+	QUuid        mID;
 	QString      mName;
 	int          mStatus;
 	QString      mLocation;

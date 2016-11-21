@@ -1,8 +1,8 @@
 
-<client id="0">
-    <name>gordian</name>
-    <status>0</status>
-    <location>Haus 8</location>
-    <phone>6551</phone>
+<client id="{00000000-0000-0000-0000-000000000000}">
+    <name>Gordian</name>
+    <status>1</status>
+    <location></location>
+    <phone></phone>
     <notes></notes>
 </client>

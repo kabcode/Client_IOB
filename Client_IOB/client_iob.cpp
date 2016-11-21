@@ -48,7 +48,7 @@ void Client_IOB::loadXMLDocument()
 			xmlWriter.setAutoFormatting(true);
 			xmlWriter.writeStartDocument();
 			xmlWriter.writeStartElement("client");
-			xmlWriter.writeAttribute(QString("id"), "0");
+			xmlWriter.writeAttribute(QString("id"), QUuid::QUuid().toString());
 			xmlWriter.writeTextElement(QString("name"), "");
 			xmlWriter.writeTextElement(QString("status"), QString::number(Client_IOB::STATUS::ABSENT));
 			xmlWriter.writeEndElement();
@@ -277,7 +277,17 @@ void Client_IOB::contactServer()
 	qDebug() << mUrl;
 	connect(&mWebSocket, &QWebSocket::connected, this, &Client_IOB::onConnected);
 	connect(&mWebSocket, &QWebSocket::disconnected, this, &Client_IOB::closed);
-	mWebSocket.open(QUrl(mUrl));
+	try
+	{
+		mWebSocket.open(QUrl(mUrl));
+	}
+	catch(QException err)
+	{
+		QMessageBox messageBox;
+		messageBox.critical(0, "Error", "No server connection!");
+		messageBox.setFixedSize(500, 200);
+		QApplication::exit(EXIT_FAILURE);
+	}
 }
 
 void Client_IOB::onConnected()
