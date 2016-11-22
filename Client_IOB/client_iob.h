@@ -60,7 +60,8 @@ private slots:
 	void updateStatus(int);
 	// network slots
 	void onConnected();
-	void onTextMessageReceived(QString message);
+	void onTextMessageReceived(QString);
+	void onBinaryMessageReceived(QByteArray);
 
 private:
 	// member variables
@@ -84,6 +85,7 @@ private:
 	void writeXMLDocument();
 	void setStatus();
 	void contactServer();
+	void registerAtServer();
 
 	// UI variables
 	Ui::Client_IOBClass ui;

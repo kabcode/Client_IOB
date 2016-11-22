@@ -48,7 +48,7 @@ void Client_IOB::loadXMLDocument()
 			xmlWriter.setAutoFormatting(true);
 			xmlWriter.writeStartDocument();
 			xmlWriter.writeStartElement("client");
-			xmlWriter.writeAttribute(QString("id"), QUuid::QUuid().toString());
+			xmlWriter.writeAttribute(QString("id"), QUuid::createUuid().toString());
 			xmlWriter.writeTextElement(QString("name"), "");
 			xmlWriter.writeTextElement(QString("status"), QString::number(Client_IOB::STATUS::ABSENT));
 			xmlWriter.writeEndElement();
@@ -294,25 +294,32 @@ void Client_IOB::onConnected()
 {
 	qDebug() << "WebSocket connected";
 	connect(&mWebSocket, &QWebSocket::textMessageReceived, this, &Client_IOB::onTextMessageReceived);
+	connect(&mWebSocket, &QWebSocket::binaryMessageReceived, this, &Client_IOB::onBinaryMessageReceived);
+
+	this->registerAtServer();
+}
 	
-	// send ID if ID == 0, then request IDs
-	if (mID != 0)
-	{
-		QString telegram = QString::number(MESSAGEID::REGISTRATION);
-		telegram.append("#").append(mID.toString());
-		mWebSocket.sendTextMessage(telegram);
-	}
-	//request ID by sending a zero
-	else
-	{
-		QString telegram = QString::number(MESSAGEID::REGISTRATION);
-		telegram.append("#").append(QString::number(0));
-		mWebSocket.sendTextMessage(telegram);
-	}
+
+void Client_IOB::onTextMessageReceived(QString telegram)
+{
+	qDebug() << "Message received:" << telegram;
 }
 
-void Client_IOB::onTextMessageReceived(QString message)
+void Client_IOB::registerAtServer()
 {
-	qDebug() << "Message received:" << message;
-	mWebSocket.close();
+	// create registration byte array
+	QString registration(QString::number(MESSAGEID::REGISTRATION));
+	registration.append("#").append(this->mID.toString());
+	registration.append("#").append(this->mName);
+	registration.append("#").append(QString::number(this->mStatus));
+	registration.append("#").append(this->mLocation);
+	registration.append("#").append(this->mPhone);
+	registration.append("#").append(this->mNotes);
+	qDebug() << registration;
+
+}
+
+void Client_IOB::onBinaryMessageReceived(QByteArray telegram)
+{
+
 }
