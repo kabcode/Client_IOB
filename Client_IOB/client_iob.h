@@ -47,6 +47,8 @@ public:
 		REQUEST,
 		REGISTRATION,
 		UPDATE,
+		MESSAGE,
+		REFUSAL,
 		TEST
 	};
 
@@ -61,7 +63,6 @@ private slots:
 	// network slots
 	void onConnected();
 	void onTextMessageReceived(QString);
-	void onBinaryMessageReceived(QByteArray);
 
 private:
 	// member variables

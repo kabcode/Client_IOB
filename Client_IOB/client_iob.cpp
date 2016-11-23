@@ -9,6 +9,7 @@ Client_IOB::Client_IOB(QWidget *parent)
 	: QMainWindow(parent),
 	mStatusXML("status")
 {
+
 	// load xml document with last status
 	this->loadXMLDocument();
 		
@@ -90,6 +91,11 @@ void Client_IOB::setStatus()
 	// get the value of the document nodes
 	QDomElement root = mStatusXML.firstChildElement("client");
 	mID = root.attribute("id");
+	if (mID == QUuid::QUuid().toString())
+	{
+		mID = QUuid::createUuid();
+	}
+		
 	qDebug() << mID;
 	QDomElement domStatus = root.firstChildElement("status");
 	mStatus = domStatus.text().toInt();
@@ -294,7 +300,6 @@ void Client_IOB::onConnected()
 {
 	qDebug() << "WebSocket connected";
 	connect(&mWebSocket, &QWebSocket::textMessageReceived, this, &Client_IOB::onTextMessageReceived);
-	connect(&mWebSocket, &QWebSocket::binaryMessageReceived, this, &Client_IOB::onBinaryMessageReceived);
 
 	this->registerAtServer();
 }
@@ -302,6 +307,16 @@ void Client_IOB::onConnected()
 
 void Client_IOB::onTextMessageReceived(QString telegram)
 {
+	// control flow for messages
+	QStringList content = telegram.split("#");
+	int control = content.at(0).toInt();
+	switch (control)
+	{
+	case MESSAGEID::REFUSAL:
+		qDebug() << content.at(1);
+	default:
+		break;
+	}
 	qDebug() << "Message received:" << telegram;
 }
 
@@ -317,9 +332,10 @@ void Client_IOB::registerAtServer()
 	registration.append("#").append(this->mNotes);
 	qDebug() << registration;
 
-}
+	if (!mWebSocket.sendTextMessage(registration))
+	{
+		qDebug() << "Registration couldnt be carried out!";
+	}
 
-void Client_IOB::onBinaryMessageReceived(QByteArray telegram)
-{
 
 }
