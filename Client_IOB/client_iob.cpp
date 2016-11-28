@@ -274,7 +274,7 @@ void Client_IOB::writeXMLDocument()
 	qDebug() << "Wrote XML file:" << mXMLFileName;
 }// END writeXMLDocument
 
-// start connection to server
+// open connection to server
 void Client_IOB::contactServer()
 {
 	mServerAddress = QHostAddress::LocalHost;
@@ -283,6 +283,7 @@ void Client_IOB::contactServer()
 	qDebug() << mUrl;
 	connect(&mWebSocket, &QWebSocket::connected, this, &Client_IOB::onConnected);
 	connect(&mWebSocket, &QWebSocket::disconnected, this, &Client_IOB::closed);
+	
 	try
 	{
 		mWebSocket.open(QUrl(mUrl));
@@ -303,7 +304,6 @@ void Client_IOB::onConnected()
 
 	this->registerAtServer();
 }
-	
 
 void Client_IOB::onTextMessageReceived(QString telegram)
 {
@@ -320,6 +320,7 @@ void Client_IOB::onTextMessageReceived(QString telegram)
 	qDebug() << "Message received:" << telegram;
 }
 
+// starts registration process
 void Client_IOB::registerAtServer()
 {
 	// create registration byte array
@@ -334,8 +335,14 @@ void Client_IOB::registerAtServer()
 
 	if (!mWebSocket.sendTextMessage(registration))
 	{
-		qDebug() << "Registration couldnt be carried out!";
+		qDebug() << "Registration could not be carried out!";
 	}
 
+
+}
+
+// todo
+void Client_IOB::closed()
+{
 
 }

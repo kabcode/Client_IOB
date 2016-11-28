@@ -53,7 +53,7 @@ public:
 	};
 
 signals:
-	void closed();
+	
 
 private slots:
 	// update the internal member variables
@@ -63,6 +63,7 @@ private slots:
 	// network slots
 	void onConnected();
 	void onTextMessageReceived(QString);
+	void closed();
 
 private:
 	// member variables
