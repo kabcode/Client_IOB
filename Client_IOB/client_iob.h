@@ -49,6 +49,7 @@ public:
 		UPDATE,
 		MESSAGE,
 		REFUSAL,
+		CLOSING,
 		TEST
 	};
 
@@ -64,6 +65,7 @@ private slots:
 	void onConnected();
 	void onTextMessageReceived(QString);
 	void closed();
+	void closingConnection();
 
 private:
 	// member variables

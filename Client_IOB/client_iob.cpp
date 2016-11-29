@@ -29,6 +29,7 @@ Client_IOB::Client_IOB(QWidget *parent)
 Client_IOB::~Client_IOB()
 {
 	writeXMLDocument();
+	closingConnection();
 	delete trayIconMenu;
 	delete signalMapper;	
 } // END destructor
@@ -337,7 +338,7 @@ void Client_IOB::registerAtServer()
 	{
 		qDebug() << "Registration could not be carried out!";
 	}
-
+	// todo if registration failed
 
 }
 
@@ -345,4 +346,17 @@ void Client_IOB::registerAtServer()
 void Client_IOB::closed()
 {
 
+}
+
+// closing connection from client side
+void Client_IOB::closingConnection()
+{
+	QString closingTelegram(QString::number(MESSAGEID::CLOSING));
+	closingTelegram.append("#").append(this->mID.toString());
+	if (!mWebSocket.sendTextMessage(closingTelegram))
+	{
+		qDebug() << "Registration could not be carried out!";
+	}
+	// close connection nontheless
+	mWebSocket.close();
 }
