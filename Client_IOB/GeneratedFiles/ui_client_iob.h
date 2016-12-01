@@ -46,12 +46,12 @@ public:
     QTableView *tableView;
     QWidget *gridLayoutWidget;
     QGridLayout *gridLayout;
-    QLineEdit *lineEditPhone;
+    QLineEdit *lineEditNotes;
     QPushButton *pushButtonUpdate;
     QLineEdit *lineEditLocation;
     QLabel *labelNotes;
     QLabel *labelLocation;
-    QLineEdit *lineEditNotes;
+    QLineEdit *lineEditPhone;
     QLabel *labelPhone;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
@@ -149,10 +149,10 @@ public:
         gridLayout->setContentsMargins(11, 11, 11, 11);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
         gridLayout->setContentsMargins(0, 0, 0, 0);
-        lineEditPhone = new QLineEdit(gridLayoutWidget);
-        lineEditPhone->setObjectName(QStringLiteral("lineEditPhone"));
+        lineEditNotes = new QLineEdit(gridLayoutWidget);
+        lineEditNotes->setObjectName(QStringLiteral("lineEditNotes"));
 
-        gridLayout->addWidget(lineEditPhone, 2, 2, 1, 1);
+        gridLayout->addWidget(lineEditNotes, 2, 2, 1, 1);
 
         pushButtonUpdate = new QPushButton(gridLayoutWidget);
         pushButtonUpdate->setObjectName(QStringLiteral("pushButtonUpdate"));
@@ -186,12 +186,12 @@ public:
 
         gridLayout->addWidget(labelLocation, 0, 0, 1, 1);
 
-        lineEditNotes = new QLineEdit(gridLayoutWidget);
-        lineEditNotes->setObjectName(QStringLiteral("lineEditNotes"));
-        sizePolicy1.setHeightForWidth(lineEditNotes->sizePolicy().hasHeightForWidth());
-        lineEditNotes->setSizePolicy(sizePolicy1);
+        lineEditPhone = new QLineEdit(gridLayoutWidget);
+        lineEditPhone->setObjectName(QStringLiteral("lineEditPhone"));
+        sizePolicy1.setHeightForWidth(lineEditPhone->sizePolicy().hasHeightForWidth());
+        lineEditPhone->setSizePolicy(sizePolicy1);
 
-        gridLayout->addWidget(lineEditNotes, 2, 1, 1, 1);
+        gridLayout->addWidget(lineEditPhone, 2, 1, 1, 1);
 
         labelPhone = new QLabel(gridLayoutWidget);
         labelPhone->setObjectName(QStringLiteral("labelPhone"));

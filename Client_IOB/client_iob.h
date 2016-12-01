@@ -66,6 +66,7 @@ private slots:
 	void onTextMessageReceived(QString);
 	void closed();
 	void closingConnection();
+	void sendUpdate();
 
 private:
 	// member variables
@@ -90,6 +91,7 @@ private:
 	void setStatus();
 	void contactServer();
 	void registerAtServer();
+	QString buildMessageBody(QString);
 
 	// UI variables
 	Ui::Client_IOBClass ui;

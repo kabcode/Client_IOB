@@ -114,7 +114,7 @@ void Client_IOB::setStatus()
 		{
 			mName = text;
 		}
-		// if user doesnt provide a name
+		// if user does not provide a name
 		else
 		{
 			QMessageBox messageBox;
@@ -174,6 +174,7 @@ void Client_IOB::initializeUIComponents()
 	connect(buttonYellow, SIGNAL(clicked()), signalMapper, SLOT(map()));
 	connect(buttonGreen,  SIGNAL(clicked()), signalMapper, SLOT(map()));
 	connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(updateStatus(int)));
+	connect(signalMapper, SIGNAL(mapped(int)), this, SLOT(sendUpdate()));
 	updateStatus(mStatus);
 
 	// set tray icon settings
@@ -198,6 +199,7 @@ void Client_IOB::updateMember()
 	mLocation = locationEdit->text();
 	mPhone = phoneEdit->text();
 	mNotes = notesEdit->text();
+	sendUpdate();
 } // END updateMember
 
 // update the status semafore
@@ -296,6 +298,7 @@ void Client_IOB::contactServer()
 		messageBox.setFixedSize(500, 200);
 		QApplication::exit(EXIT_FAILURE);
 	}
+	
 }
 
 void Client_IOB::onConnected()
@@ -338,12 +341,7 @@ void Client_IOB::registerAtServer()
 {
 	// create registration byte array
 	QString registration(QString::number(MESSAGEID::REGISTRATION));
-	registration.append("#").append(this->mID.toString());
-	registration.append("#").append(this->mName);
-	registration.append("#").append(QString::number(this->mStatus));
-	registration.append("#").append(this->mLocation);
-	registration.append("#").append(this->mPhone);
-	registration.append("#").append(this->mNotes);
+	registration = buildMessageBody(registration);
 	qDebug() << registration;
 
 	if (!mWebSocket.sendTextMessage(registration))
@@ -352,7 +350,6 @@ void Client_IOB::registerAtServer()
 		qDebug() << "Registration could not be carried out!";
 	}
 	// todo if registration succed
-
 }
 
 // todo
@@ -372,4 +369,32 @@ void Client_IOB::closingConnection()
 	}
 	// close connection nontheless
 	mWebSocket.close();
+}
+
+// todo send update to server
+void Client_IOB::sendUpdate()
+{
+	QString update(QString::number(MESSAGEID::UPDATE));
+	update = buildMessageBody(update);
+	qDebug() << update;
+	
+	if (!mWebSocket.sendTextMessage(update))
+	{
+		// todo update failed
+		qDebug() << "Update not sent";
+	}
+	// todo if registration succed
+	
+}
+
+// message body for registration and updates
+QString Client_IOB::buildMessageBody(QString telegram)
+{
+	telegram.append("#").append(this->mID.toString());
+	telegram.append("#").append(this->mName);
+	telegram.append("#").append(QString::number(this->mStatus));
+	telegram.append("#").append(this->mLocation);
+	telegram.append("#").append(this->mPhone);
+	telegram.append("#").append(this->mNotes);
+	return telegram;
 }

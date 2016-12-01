@@ -213,7 +213,7 @@ background: none;</string>
       <number>2</number>
      </property>
      <item row="2" column="2">
-      <widget class="QLineEdit" name="lineEditPhone"/>
+      <widget class="QLineEdit" name="lineEditNotes"/>
      </item>
      <item row="2" column="3">
       <widget class="QPushButton" name="pushButtonUpdate">
@@ -259,7 +259,7 @@ background: none;</string>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="lineEditNotes">
+      <widget class="QLineEdit" name="lineEditPhone">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
          <horstretch>1</horstretch>
