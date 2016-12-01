@@ -308,6 +308,7 @@ void Client_IOB::onConnected()
 
 void Client_IOB::onTextMessageReceived(QString telegram)
 {
+	qDebug() << "Message received:" << telegram;
 	// control flow for messages
 	QStringList content = telegram.split("#");
 	int control = content.at(0).toInt();
@@ -315,10 +316,21 @@ void Client_IOB::onTextMessageReceived(QString telegram)
 	{
 	case MESSAGEID::REFUSAL:
 		qDebug() << content.at(1);
+	case MESSAGEID::UPDATE:
+	{
+		if (content.at(1) == mID.toString())
+		{
+			qDebug() << "Thats me. Nothing to do here";
+			// todo nothing, maybe an ack to check against sent information
+		}
+		else
+		{
+			// todo: update the client list and table
+		}
+	}
 	default:
 		break;
 	}
-	qDebug() << "Message received:" << telegram;
 }
 
 // starts registration process
@@ -336,9 +348,10 @@ void Client_IOB::registerAtServer()
 
 	if (!mWebSocket.sendTextMessage(registration))
 	{
+		// todo registration failed
 		qDebug() << "Registration could not be carried out!";
 	}
-	// todo if registration failed
+	// todo if registration succed
 
 }
 
