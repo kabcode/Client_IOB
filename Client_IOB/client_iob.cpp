@@ -190,6 +190,16 @@ void Client_IOB::initializeUIComponents()
 	trayIcon->setContextMenu(trayIconMenu);
 	trayIcon->show();
 
+	// create table view
+	this->tableWidget = ui.tableWidget;
+	tableWidget->setRowCount(0);
+	tableWidget->setColumnCount(5);
+	QStringList tableWidgetHeader;
+	tableWidgetHeader <<"#"<< "Name"<< "Location" << "Phone" << "Notes";
+	tableWidget->setHorizontalHeaderLabels(tableWidgetHeader);
+	tableWidget->verticalHeader()->setVisible(false);
+	tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+
 }// END initializeUIComponents
 
 // update the member variables if update button is clicked
@@ -329,6 +339,7 @@ void Client_IOB::onTextMessageReceived(QString telegram)
 		else
 		{
 			// todo: update the client list and table
+			// todo turn clients in tablewidgetitems and add them to the table
 		}
 	}
 	default:

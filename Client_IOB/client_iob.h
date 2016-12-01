@@ -20,6 +20,7 @@
 // library for menu icon
 #include <QSystemTrayIcon>
 #include <QMenu>
+#include <QTableWidget>
 
 //******************//
 //   Client Class   //
@@ -111,6 +112,8 @@ private:
 	QAction *minimizeAction   = 0;
 	QAction *restoreAction    = 0; 
 	QAction *quitAction       = 0;
+
+	QTableWidget *tableWidget = 0;
 
 	// UI functions
 	void initializeUIComponents();

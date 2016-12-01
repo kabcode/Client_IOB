@@ -22,7 +22,7 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSpacerItem>
 #include <QtWidgets/QStatusBar>
-#include <QtWidgets/QTableView>
+#include <QtWidgets/QTableWidget>
 #include <QtWidgets/QToolBar>
 #include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
@@ -43,7 +43,7 @@ public:
     QSpacerItem *verticalSpacer_2;
     QPushButton *buttonAvailable;
     QSpacerItem *verticalSpacer_4;
-    QTableView *tableView;
+    QTableWidget *tableWidget;
     QWidget *gridLayoutWidget;
     QGridLayout *gridLayout;
     QLineEdit *lineEditNotes;
@@ -136,10 +136,10 @@ public:
 
         horizontalLayout_3->addLayout(verticalLayout);
 
-        tableView = new QTableView(horizontalLayoutWidget_3);
-        tableView->setObjectName(QStringLiteral("tableView"));
+        tableWidget = new QTableWidget(horizontalLayoutWidget_3);
+        tableWidget->setObjectName(QStringLiteral("tableWidget"));
 
-        horizontalLayout_3->addWidget(tableView);
+        horizontalLayout_3->addWidget(tableWidget);
 
         gridLayoutWidget = new QWidget(centralWidget);
         gridLayoutWidget->setObjectName(QStringLiteral("gridLayoutWidget"));
