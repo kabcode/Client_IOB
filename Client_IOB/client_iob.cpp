@@ -197,6 +197,8 @@ void Client_IOB::initializeUIComponents()
 	QStringList tableWidgetHeader;
 	tableWidgetHeader <<"#"<< "Name"<< "Location" << "Phone" << "Notes";
 	tableWidget->setHorizontalHeaderLabels(tableWidgetHeader);
+	tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+	tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 	tableWidget->verticalHeader()->setVisible(false);
 	tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
@@ -339,6 +341,19 @@ void Client_IOB::onTextMessageReceived(QString telegram)
 		else
 		{
 			// todo: update the client list and table
+			QList<Client>::iterator iter = otherClients.begin();
+			for(iter; iter != otherClients.end(); ++iter)
+			{ 
+				if (iter->getUuid() == content.at(1))
+				{
+					// known uuid
+					iter->changeName(content.at(2));
+					iter->changeStatus(content.at(3).toInt());
+					iter->changeLocation(content.at(4));
+					iter->changePhone(content.at(5));
+					iter->changeNotes(content.at(6));
+				}
+			}
 			// todo turn clients in tablewidgetitems and add them to the table
 		}
 	}

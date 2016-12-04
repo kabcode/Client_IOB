@@ -4,6 +4,7 @@
 // standard includes 
 #include <QtWidgets/QMainWindow>
 #include "ui_client_iob.h"
+#include "client.h"
 // qt network library
 #include <QtNetwork>
 // qt web socket lib
@@ -81,6 +82,7 @@ private:
 	QString      mNotes;
 	QHostAddress mServerAddress;
 	qint16		 mServerPort;
+	QList<Client> otherClients;
 	
 	// network variables
 	QWebSocket		mWebSocket;
