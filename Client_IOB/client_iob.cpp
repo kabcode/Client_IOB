@@ -193,14 +193,15 @@ void Client_IOB::initializeUIComponents()
 	// create table view
 	this->tableWidget = ui.tableWidget;
 	tableWidget->setRowCount(0);
-	tableWidget->setColumnCount(5);
+	tableWidget->setColumnCount(6);
 	QStringList tableWidgetHeader;
-	tableWidgetHeader <<"#"<< "Name"<< "Location" << "Phone" << "Notes";
+	tableWidgetHeader << "uuid" <<"#"<< "Name"<< "Location" << "Phone" << "Notes";
 	tableWidget->setHorizontalHeaderLabels(tableWidgetHeader);
 	tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 	tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
 	tableWidget->verticalHeader()->setVisible(false);
 	tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers);
+	tableWidget->hideColumn(0);
 
 }// END initializeUIComponents
 
@@ -341,20 +342,33 @@ void Client_IOB::onTextMessageReceived(QString telegram)
 		else
 		{
 			// todo: update the client list and table
-			QList<Client>::iterator iter = otherClients.begin();
+			QList<Client*>::iterator iter = otherClients.begin();
 			for(iter; iter != otherClients.end(); ++iter)
 			{ 
-				if (iter->getUuid() == content.at(1))
+				if ((*iter)->getUuid() == content.at(1))
 				{
 					// known uuid
-					iter->changeName(content.at(2));
-					iter->changeStatus(content.at(3).toInt());
-					iter->changeLocation(content.at(4));
-					iter->changePhone(content.at(5));
-					iter->changeNotes(content.at(6));
+					(*iter)->changeName(content.at(2));
+					(*iter)->changeStatus(content.at(3).toInt());
+					(*iter)->changeLocation(content.at(4));
+					(*iter)->changePhone(content.at(5));
+					(*iter)->changeNotes(content.at(6));
+					
+					return;
 				}
 			}
+
+			// if client is not known -> create and add a new client
+			Client* cl = new Client(QUuid(content.at(1)));
+			cl->changeName( content.at(2));
+			cl->changeStatus(content.at(3).toInt());
+			cl->changeLocation(content.at(4));
+			cl->changePhone(content.at(5));
+			cl->changeNotes(content.at(6));
+			otherClients.push_back(cl);
+			updateTable(cl);
 			// todo turn clients in tablewidgetitems and add them to the table
+
 		}
 	}
 	default:
@@ -423,4 +437,60 @@ QString Client_IOB::buildMessageBody(QString telegram)
 	telegram.append("#").append(this->mPhone);
 	telegram.append("#").append(this->mNotes);
 	return telegram;
+}
+
+void Client_IOB::updateTable(Client* cl)
+{
+	// find if client is already listed in the table
+	for (int i = 0; i < tableWidget->rowCount(); ++i)
+	{
+		// retrieve header column and item
+		if (tableWidget->item(i, 0)->text() == cl->getUuid())
+		{
+			switch (cl->getStatus())
+			{
+			case STATUS::ABSENT:
+				tableWidget->item(i, 1)->setIcon(QIcon(":/Client_IOB/redIcon")); break;
+			case STATUS::BUSY:
+				tableWidget->item(i, 1)->setIcon(QIcon(":/Client_IOB/yellowIcon")); break;
+			case STATUS::AVAILABE:
+				tableWidget->item(i, 1)->setIcon(QIcon(":/Client_IOB/greenIcon")); break;
+			default:
+				tableWidget->item(i, 1)->setIcon(QIcon(":/Client_IOB/blackIcon"));
+			}
+			tableWidget->item(i, 2)->setText(cl->getName());
+			tableWidget->item(i, 3)->setText(cl->getLocation());
+			tableWidget->item(i, 4)->setText(cl->getPhone());
+			tableWidget->item(i, 5)->setText(cl->getNotes());
+			return;
+		}
+	}
+
+	int row = tableWidget->rowCount() + 1;
+	QTableWidgetItem *itemUuid = new QTableWidgetItem(cl->getUuid());
+	QTableWidgetItem *itemName = new QTableWidgetItem(cl->getName());
+	QTableWidgetItem *itemStatus = new QTableWidgetItem();
+	
+	switch (cl->getStatus())
+	{
+		case STATUS::ABSENT:
+			itemStatus->setIcon(QIcon(":/Client_IOB/redIcon")); break;
+		case STATUS::BUSY:
+			itemStatus->setIcon(QIcon(":/Client_IOB/yellowIcon")); break;
+		case STATUS::AVAILABE:
+			itemStatus->setIcon(QIcon(":/Client_IOB/greenIcon")); break;
+		default:
+			itemStatus->setIcon(QIcon(":/Client_IOB/blackIcon"));
+	}
+	QTableWidgetItem *itemLocation = new QTableWidgetItem(cl->getLocation());
+	QTableWidgetItem *itemPhone = new QTableWidgetItem(cl->getPhone());
+	QTableWidgetItem *itemNotes = new QTableWidgetItem(cl->getNotes());
+
+	tableWidget->setItem(row, 0, itemUuid);
+	tableWidget->setItem(row, 1, itemStatus);
+	tableWidget->setItem(row, 2, itemName);
+	tableWidget->setItem(row, 3, itemLocation);
+	tableWidget->setItem(row, 4, itemPhone);
+	tableWidget->setItem(row, 5, itemNotes);
+
 }

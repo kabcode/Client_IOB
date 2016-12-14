@@ -82,7 +82,7 @@ private:
 	QString      mNotes;
 	QHostAddress mServerAddress;
 	qint16		 mServerPort;
-	QList<Client> otherClients;
+	QList<Client*> otherClients;
 	
 	// network variables
 	QWebSocket		mWebSocket;
@@ -95,6 +95,7 @@ private:
 	void contactServer();
 	void registerAtServer();
 	QString buildMessageBody(QString);
+	void updateTable(Client*);
 
 	// UI variables
 	Ui::Client_IOBClass ui;

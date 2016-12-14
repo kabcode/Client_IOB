@@ -17,6 +17,11 @@ public:
 	void changeLocation(QString);
 	void changePhone(QString);
 	void changeNotes(QString);
+	QString getName() { return name; };
+	QString getLocation() { return location; };
+	QString getPhone() { return phone; };
+	QString getNotes() { return notes; };
+	int		getStatus() { return status; };
 
 private:
 	QUuid uuid = QUuid::QUuid();

@@ -1,9 +1,9 @@
 <RCC>
     <qresource prefix="/Client_IOB">
         <file>Resources/kicker.ico</file>
-        <file>Resources/black.png</file>
-        <file>Resources/green.png</file>
-        <file>Resources/red.png</file>
-        <file>Resources/yellow.png</file>
+        <file alias="blackIcon">Resources/black.png</file>
+        <file alias="greenIcon">Resources/green.png</file>
+        <file alias="redIcon">Resources/red.png</file>
+        <file alias="yellowIcon">Resources/yellow.png</file>
     </qresource>
 </RCC>
