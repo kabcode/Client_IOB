@@ -220,7 +220,7 @@ void Client_IOB::updateStatus(int newStatus)
 {
 	mStatus = newStatus;
 	// set the semafore
-	QIcon* iconBlack = new QIcon("Resources/black.png");
+	QIcon* iconBlack = new QIcon(":/Client_IOB/blackIcon");
 	buttonRed->setIcon(*iconBlack);
 	buttonYellow->setIcon(*iconBlack);
 	buttonGreen->setIcon(*iconBlack);
@@ -229,15 +229,15 @@ void Client_IOB::updateStatus(int newStatus)
 	switch(mStatus)
 	{
 	case STATUS::ABSENT:
-		icon = new QIcon("Resources/red.png");
+		icon = new QIcon(":/Client_IOB/redIcon");
 		buttonRed->setIcon(*icon);
 		break;
 	case STATUS::BUSY:
-		icon = new QIcon("Resources/yellow.png");
+		icon = new QIcon(":/Client_IOB/yellowIcon");
 		buttonYellow->setIcon(*icon);
 		break;
 	case STATUS::AVAILABE:
-		icon = new QIcon("Resources/green.png");
+		icon = new QIcon(":/Client_IOB/greenIcon");
 		buttonGreen->setIcon(*icon);
 	}
 
@@ -293,7 +293,15 @@ void Client_IOB::writeXMLDocument()
 // open connection to server
 void Client_IOB::contactServer()
 {
-	mServerAddress = QHostAddress::LocalHost;
+	if (mServerAddress.isNull())
+	{
+		bool ok;
+		QString address = QInputDialog::getText(this, tr("QInputDialog::getText()"),
+			tr("IP address:"), QLineEdit::Normal, QHostAddress(QHostAddress::LocalHost).toString(), &ok);
+		if (ok && !address.isEmpty())
+			mServerAddress = QHostAddress(address);
+	}
+	//mServerAddress = QHostAddress::LocalHost;
 	mServerPort = 9000;
 	mUrl = QUrl(QString("ws://%1:%2").arg(mServerAddress.toString()).arg(mServerPort));
 	qDebug() << mUrl;
@@ -492,5 +500,4 @@ void Client_IOB::updateTable(Client* cl)
 	tableWidget->setItem(row, 3, itemLocation);
 	tableWidget->setItem(row, 4, itemPhone);
 	tableWidget->setItem(row, 5, itemNotes);
-
 }
